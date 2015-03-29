@@ -1,0 +1,4 @@
+ -> implement missing parts of the RDS (and related) standards
+ -> add hooks for string tables in a serial EEPROM
+ -> add the humongous string tables
+ -> add example when code complete

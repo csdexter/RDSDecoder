@@ -1,0 +1,24 @@
+Arduino RDS/RBDS (IEC 62016/NRSC-4-B) Decoding Library
+
+Split off from Arduino Si4735 Library 
+  by Radu - Eosif Mihailescu <radu.mihailescu@linux360.ro> 3/29/2015
+
+This library is intended for decoding (as in interpreting) an RDS data stream
+as received from a broadcast FM radio station. The input is by single RDS group
+at a time while the output is a global (accumulated) state record as well as
+a callback system for certain types of received data.
+
+In particular, please note this library does not cover decoding (as in framing 
+detection and data integrity checking) an RDS data stream as received from a
+stand-alone RDS demodulator chip.
+
+To the furthest extent that this is legally possible, the fork maintained by
+Radu - Eosif Mihailescu and published here https://github.com/csdexter/Si4735
+is hereby released under the LGPL version 3.
+To the furthest extent that this is legally enforceable, the copyright remains
+with the authors listed above.
+
+See the example sketches to learn how to use the library in your code.
+
+For general questions and updates on this library please contact the fork
+maintainer at <radu.mihailescu@linux360.ro>.
