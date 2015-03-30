@@ -63,21 +63,33 @@ typedef struct {
 } TRDSTime;
 
 typedef struct __attribute__ ((__packed__)) {
-  uint8_t country:4;
-  uint8_t area:4;
-  byte program;
+    uint8_t country:4;
+    uint8_t area:4;
+    byte program;
 } TRDSPI;
 
 typedef struct __attribute__ ((__packed__)) {
-  uint8_t day:5;
-  uint8_t hour:5;
-  uint8_t minute:6;
+    union {
+        struct {
+            uint8_t groupType:4;
+            uint8_t version:1;
+        };
+        uint8_t groupNumber:5;
+    };
+    uint8_t trafficProgram:1;
+    uint8_t programType:5;
+} TRDSBlockB;
+
+typedef struct __attribute__ ((__packed__)) {
+    uint8_t day:5;
+    uint8_t hour:5;
+    uint8_t minute:6;
 } TRDSPIN;
 
 typedef struct __attribute__ ((__packed__)) {
-  uint8_t romClassNumber:5;
-  uint16_t serialNumber:10;
-  uint8_t scopeFlag:1;
+    uint8_t romClassNumber:5;
+    uint16_t serialNumber:10;
+    uint8_t scopeFlag:1;
 } TRDSIRDSMessage;
 
 typedef struct __attribute__ ((__packed__)) {
@@ -104,16 +116,16 @@ typedef struct __attribute__ ((__packed__)) {
 } TRDSTMCMessage;
 
 typedef struct {
-  word applicationIdentification;
-  word message;
-  byte carriedInGroup;
+    byte carriedInGroup;
+    word message;
+    word applicationIdentification;
 } TRDSAppID;
 
 typedef struct __attribute__ ((__packed__)) {
-  uint8_t linkageActuator:1;
-  uint8_t extendedGeneric:1;
-  uint8_t internationalLinkageSet:1;
-  uint16_t linkageSet:12;
+    uint8_t linkageActuator:1;
+    uint8_t extendedGeneric:1;
+    uint8_t internationalLinkageSet:1;
+    uint16_t linkageSet:12;
 } TRDSLinkageInformation;
 
 typedef struct {
@@ -133,8 +145,8 @@ typedef struct {
 
 typedef struct {
     union {
-        word programIdentifier;
-        TRDSPI programIdentifierEBU;
+        word programIdentifierUS;
+        TRDSPI programIdentifierEU;
     };
     bool TP, TA, MS;
     byte PTY, DICC;
@@ -163,7 +175,7 @@ typedef struct {
 //particular RDS group blocks C and D.
 //RDS_CALLBACK_AF:
 //    First parameter always 0x00, second always true, third contains one pair
-//    of AF codes, as presented in a 0A group.
+//    of AF codes, as presented in a 0A group, fourth is undefined.
 //RDS_CALLBACK_TDC:
 //    First parameter contains the segment address, second true if this was a
 //    5A group, third and fourth contain data in blocks C and D of source group.
@@ -178,7 +190,7 @@ typedef struct {
 //    First parameter is 1 if this is an AF pair (variant 4), 2 if this is a
 //    mapped FM frequency pair (variants 5-8) or 3 if this is a mapped AM
 //    frequency pair (variant 9); second is always true, third contains the
-//    frequency pair and the fourth is always zero.
+//    frequency pair and fourth is undefined.
 typedef void (*TRDSCallback)(byte, bool, word, word);
 
 class RDSDecoder
@@ -241,7 +253,7 @@ class RDSDecoder
         * Description:
         *   Filters the string str in place to only contain printable
         *   characters and also replaces 0x0D (CR) with 0x00 effectively
-        *   ending the string at that point as per RDBS §3.1.5.3.
+        *   ending the string at that point as per RDS §3.1.5.3.
         *   Any unprintable character is converted to a question mark ("?"),
         *   as is customary. This helps with filtering out noisy strings.
         */
@@ -279,17 +291,23 @@ class RDSTranslator
         /*
         * Description:
         *   Decodes the station callsign out of the PI using the method
-        *   defined in the RDBS standard for North America. If not under RDBS,
+        *   defined in the RBDS standard for North America. If not under RBDS,
         *   you don't need to call this as you can directly access the decoded
-        *   version via the fields of RDS_Data.programIdentifierEBU.
+        *   version via the fields of TRDSData.programIdentifierEU. Note that
+        *   even under RBDS, the station may have changed its PI high nibble to
+        *   0x01 to signal itself as TMC capable, which will render callsign
+        *   decoding impossible or errorneous.
         * 
         * Parameters:
         *   programIdentifier - a word containing the Program Identifier value
-        *                       from RDBS
+        *                       from RBDS
         *   callSign - pointer to a char[] at least 5 characters long that
         *              receives the decoded station call sign
+        * Returns:
+        *   true if the PI was decoded and callSign filled or false if the
+        *   given PI cannot be decoded according to RBDS §D.7.1
         */
-        void decodeCallSign(word programIdentifier, char* callSign);
+        bool decodeCallSign(word programIdentifier, char* callSign);
 
         /*
         * Description:

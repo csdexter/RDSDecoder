@@ -22,7 +22,7 @@ void RDSDecoder::decodeRDSGroup(word block[]){
     byte grouptype;
     word fourchars[2];
 
-    _status.programIdentifier = block[0];
+    _status.programIdentifierUS = block[0];
     grouptype = lowByte((block[1] & RDS_TYPE_MASK) >> RDS_TYPE_SHR);
     _status.TP = block[1] & RDS_TP;
     _status.PTY = lowByte((block[1] & RDS_PTY_MASK) >> RDS_PTY_SHR);
@@ -393,11 +393,11 @@ void RDSTranslator::getTextForPTY(byte PTY, byte locale, char* text,
                                     byte textsize){
     switch(locale){
         case RDS_LOCALE_US:
-            strncpy_P(text, (PGM_P)(pgm_read_word(&PTY2Text_US[PTY])),
+            strncpy_P(text, (PGM_P)(pgm_read_ptr(&PTY2Text_US[PTY])),
                       textsize);
             break;
         case RDS_LOCALE_EU:
-            strncpy_P(text, (PGM_P)(pgm_read_word(&PTY2Text_EU[PTY])),
+            strncpy_P(text, (PGM_P)(pgm_read_ptr(&PTY2Text_EU[PTY])),
                     textsize);
             break;
     }
@@ -418,24 +418,64 @@ byte RDSTranslator::translatePTY(byte PTY, byte fromlocale, byte tolocale){
     return 0;
 }
 
-void RDSTranslator::decodeCallSign(word programIdentifier, char* callSign){
-  //TODO: extend this to current NRSC-4-B format
-    if(programIdentifier >= 21672){
+const char PI2CallSign_S[] PROGMEM = "KEXKFHKFIKGAKGOKGUKGWKGYKIDKITKJRKLOKLZ"
+                                     "KMAKMJKNXKOA---------KQVKSLKUJKVIKWG---"
+                                     "---KYW---WBZWDZWEW---WGLWGNWGR---WHAWHB"
+                                     "WHKWHO---WIPWJRWKYWLSWLW------WOC---WOL"
+                                     "WOR---------WWJWWL------------------KDB"
+                                     "KGBKOYKPQKSDKUTKXLKXO---WBTWGHWGYWHPWIL"
+                                     "WMCWMTWOIWOWWRRWSBWSMKBWKCYKDF------KHQ"
+                                     "KOB---------------------WISWJWWJZ------"
+                                     "---WRC";
+
+bool RDSTranslator::decodeCallSign(word programIdentifier, char* callSign){
+    if (!callSign) return false;
+
+    if (programIdentifier < 0x1000 ||
+        (programIdentifier > 0x9EFF && programIdentifier < 0xA100) ||
+        programIdentifier > 0xAFAF)
+        return false;
+    else if (programIdentifier >= 0x9950 && programIdentifier <= 0x9EFF)
+        if (programIdentifier <= 0x99B9) {
+            programIdentifier -= 0x9950;
+            char exists = char(pgm_read_byte(&PI2CallSign_S[programIdentifier * 3]));
+            if (exists != '-') {
+                strncpy_P(callSign, &PI2CallSign_S[programIdentifier * 3], 3);
+                callSign[3] = '\0';
+                return true;
+            } else
+                return false;
+        } else
+            return false;
+
+
+    if (programIdentifier & 0xFFF0 == 0xAFA0)
+        programIdentifier <<= 12;
+    else if (programIdentifier & 0xFF00 == 0xAF00)
+        programIdentifier <<= 8;
+    else if (programIdentifier & 0xF000 == 0xA000)
+        programIdentifier = (programIdentifier & 0x0F00 << 4) |
+                            (programIdentifier & 0x00FF);
+
+    if (programIdentifier >= 0x54A8) {
         callSign[0] = 'W';
-        programIdentifier -= 21672;
+        programIdentifier -= 0x54A8;
+    } else if (programIdentifier >= 0x1000) {
+        callSign[0] = 'K';
+        programIdentifier -= 0x1000;
     } else
-        if(programIdentifier < 21672 && programIdentifier >= 0x1000){
-            callSign[0] = 'K';
-            programIdentifier -= 0x1000;
-        } else programIdentifier -= 1;
-    if(programIdentifier >= 0){
-        callSign[1] = char(programIdentifier / 676 + 'A');
-        callSign[2] = char((programIdentifier - 676 * programIdentifier /
-                            676) / 26 + 'A');
-        callSign[3] = char(((programIdentifier - 676 * programIdentifier /
-                             676) % 26 ) + 'A');
-        callSign[4] = '\0';
-    } else strcpy(callSign, "UNKN");
+        return false;
+
+    callSign[1] = char(programIdentifier / 676);
+    programIdentifier -= byte(callSign[1]) * 676;
+    callSign[1] += 'A';
+    callSign[2] = char(programIdentifier / 26);
+    programIdentifier -= byte(callSign[2] * 26);
+    callSign[2] += 'A';
+    callSign[3] = programIdentifier + 'A';
+    callSign[4] = '\0';
+
+    return true;
 }
 
 byte RDSTranslator::decodeTMCDistance(byte length) {
