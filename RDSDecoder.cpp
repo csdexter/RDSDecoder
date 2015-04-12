@@ -13,6 +13,22 @@
 #include "RDSDecoder.h"
 #include "RDSDecoder-private.h"
 
+#include <string.h>
+
+#if defined(__GNUC__)
+# if defined(__i386__) || defined(__x86_64__)
+#  define PROGMEM
+#  define PGM_P char *
+#  define strncpy_P strncpy
+#  define lowByte(x) (uint8_t)((x) & 0xFF)
+#  define highByte(x) (uint8_t)(((x) >> 8) & 0xFF)
+#  define pgm_read_byte(x) (uint8_t)(*x)
+#  define pgm_read_ptr(x) (void *)(*x)
+# endif
+#else
+# warning Non-GNU compiler detected, you are on your own!
+#endif
+
 void RDSDecoder::registerCallback(byte type, TRDSCallback callback){
     if (type < sizeof(_callbacks) / sizeof(_callbacks[0]))
         _callbacks[type] = callback;
@@ -37,11 +53,16 @@ void RDSDecoder::decodeRDSGroup(word block[]){
             _status.TA = block[1] & RDS_TA;
             _status.MS = block[1] & RDS_MS;
             DIPSA = lowByte(block[1] & RDS_DIPS_ADDRESS);
-            bitWrite(_status.DICC, 3 - DIPSA, block[1] & RDS_DI);
-            if(grouptype == RDS_GROUP_0A) {
+            if(block[1] & RDS_DI)
+                _status.DICC |= (0x1 << (3 - DIPSA));
+            else
+                _status.DICC &= ~(0x1 << (3 - DIPSA));
+            if(grouptype != RDS_GROUP_15B) {
                 twochars = swab(block[3]);
                 strncpy(&_status.programService[DIPSA * 2],
                         (char *)&twochars, 2);
+            };
+            if(grouptype == RDS_GROUP_0A) {
                 if (_callbacks[RDS_CALLBACK_AF])
                     _callbacks[RDS_CALLBACK_AF](0x00, true, block[2], 0x00);
             }

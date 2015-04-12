@@ -12,10 +12,22 @@
 #ifndef _RDSDECODER_H_INCLUDED
 #define _RDSDECODER_H_INCLUDED
 
-#if defined(ARDUINO) && ARDUINO >= 100
-# include <Arduino.h>
+#if defined(__GNUC__)
+# if defined(__AVR__)
+#  if defined(ARDUINO) && ARDUINO >= 100
+#   include <Arduino.h>
+#  else
+#   include <WProgram.h>
+#  endif
+# elif defined(__i386__) || defined(__x86_64__)
+#  include <stdint.h>
+#  include <stdbool.h>
+#  include <stddef.h>
+#  define word uint16_t
+#  define byte uint8_t
+# endif
 #else
-# include <WProgram.h>
+# warning Non-GNU compiler detected, you are on your own!
 #endif
 
 //Define the Locale options
@@ -148,8 +160,11 @@ typedef struct {
         word programIdentifierUS;
         TRDSPI programIdentifierEU;
     };
-    bool TP, TA, MS;
-    byte PTY, DICC;
+    uint8_t TP:1;
+    uint8_t TA:1;
+    uint8_t MS:1;
+    uint8_t DICC:4;
+    byte PTY;
     char programService[9];
     char programTypeName[9];
     char radioText[65];
