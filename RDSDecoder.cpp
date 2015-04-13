@@ -38,9 +38,9 @@ void RDSDecoder::decodeRDSGroup(word block[]){
     byte grouptype;
     word fourchars[2];
 
-    _status.programIdentifierUS = block[0];
+    _status.programIdentifier = block[0];
     grouptype = lowByte((block[1] & RDS_TYPE_MASK) >> RDS_TYPE_SHR);
-    _status.TP = block[1] & RDS_TP;
+    _status.TP = (bool)(block[1] & RDS_TP);
     _status.PTY = lowByte((block[1] & RDS_PTY_MASK) >> RDS_PTY_SHR);
 
     switch(grouptype){
@@ -50,8 +50,8 @@ void RDSDecoder::decodeRDSGroup(word block[]){
             byte DIPSA;
             word twochars;
 
-            _status.TA = block[1] & RDS_TA;
-            _status.MS = block[1] & RDS_MS;
+            _status.TA = (bool)(block[1] & RDS_TA);
+            _status.MS = (bool)(block[1] & RDS_MS);
             DIPSA = lowByte(block[1] & RDS_DIPS_ADDRESS);
             if(block[1] & RDS_DI)
                 _status.DICC |= (0x1 << (3 - DIPSA));
@@ -91,7 +91,11 @@ void RDSDecoder::decodeRDSGroup(word block[]){
         case RDS_GROUP_2B:
             byte RTA, RTAW;
 
-            if((block[1] & RDS_TEXTAB) != _rdstextab) {
+            if((bool)(block[1] & RDS_TEXTAB) != _rdstextab) {
+                if (_callbacks[RDS_CALLBACK_RT])
+                    _callbacks[RDS_CALLBACK_RT](0x00,
+                                                (grouptype == RDS_GROUP_2A),
+                                                0x00, 0x00);
                 _rdstextab = !_rdstextab;
                 memset(_status.radioText, ' ', sizeof(_status.radioText) - 1);
             }
@@ -498,6 +502,13 @@ bool RDSTranslator::decodeCallSign(word programIdentifier, char* callSign){
 
     return true;
 }
+
+void RDSTranslator::unpackEBUPI(word programIdentifier, TRDSPI *unpacked) {
+    unpacked->country = (programIdentifier & RDS_PI_COUNTRY_MASK) >>
+                        RDS_PI_COUNTRY_SHR;
+    unpacked->area = (programIdentifier & RDS_PI_AREA_MASK) >> RDS_PI_AREA_SHR;
+    unpacked->program = lowByte(programIdentifier);
+};
 
 byte RDSTranslator::decodeTMCDistance(byte length) {
     if (length == 0) return 0xFF;

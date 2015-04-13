@@ -13,6 +13,13 @@
 #ifndef _RDSDECODER_PRIVATE_H_INCLUDED
 #define _RDSDECODER_PRIVATE_H_INCLUDED
 
+//Define RDS PI masks for EBU
+#define RDS_PI_COUNTRY_MASK 0xF000
+#define RDS_PI_COUNTRY_SHR 12
+#define RDS_PI_AREA_MASK 0x0F00
+#define RDS_PI_AREA_SHR 8
+#define RDS_PI_PROGRAM_MASK word(0x00FF)
+
 //Define RDS block B decoding masks
 #define RDS_TYPE_MASK 0xF800
 #define RDS_TYPE_SHR 11

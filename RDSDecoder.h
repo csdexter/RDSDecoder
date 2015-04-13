@@ -44,6 +44,8 @@
 #define RDS_PI_AREA_NATIONAL 0x02
 #define RDS_PI_AREA_SUPRAREGIONAL 0x03
 #define RDS_PI_AREA_REGIONAL_FIRST 0x04
+#define RDS_PI_AREA_LPSR_AF 0x01
+#define RDS_PI_PROGRAM_LPSR 0x00
 #define RDS_AF_FILLER 0xCD
 #define RDS_AF_NODATA 0xE0
 #define RDS_AF_FOLLOWS_FM_FIRST 0xE1
@@ -55,7 +57,8 @@
 #define RDS_CALLBACK_AID 0x02
 #define RDS_CALLBACK_ODA 0x03
 #define RDS_CALLBACK_EON 0x04
-#define RDS_CALLBACK_LAST 0x05
+#define RDS_CALLBACK_RT 0x05
+#define RDS_CALLBACK_LAST 0x06
 
 //This holds time of day as received via RDS. Mimicking struct tm from
 //<time.h> for familiarity.
@@ -141,25 +144,16 @@ typedef struct __attribute__ ((__packed__)) {
 } TRDSLinkageInformation;
 
 typedef struct {
-    union {
-        word programIdentifier;
-        TRDSPI programIdentifierEBU;
-    };
+    word programIdentifier;
     bool TP, TA;
     byte PTY;
     char programService[9];
-    union {
-      word programItemNumber;
-      TRDSPIN PIN;
-    };
+    word programItemNumber;
     TRDSLinkageInformation linkageInformation;
 } TRDSEON;
 
 typedef struct {
-    union {
-        word programIdentifierUS;
-        TRDSPI programIdentifierEU;
-    };
+    word programIdentifier;
     uint8_t TP:1;
     uint8_t TA:1;
     uint8_t MS:1;
@@ -168,10 +162,7 @@ typedef struct {
     char programService[9];
     char programTypeName[9];
     char radioText[65];
-    union {
-        word programItemNumber;
-        TRDSPIN PIN;
-    };
+    word programItemNumber;
     bool linkageActuator;
     byte pagingOperatorCode;
     byte extendedCountryCode;
@@ -206,6 +197,11 @@ typedef struct {
 //    mapped FM frequency pair (variants 5-8) or 3 if this is a mapped AM
 //    frequency pair (variant 9); second is always true, third contains the
 //    frequency pair and fourth is undefined.
+//RDS_CALLBACK_RT:
+//    First parameter as well as the last two are always zero; the second is
+//    true if it was a 2A group that triggered this RT change. The callee is
+//    expected to call getRDSData() to fetch the current RT before it gets
+//    replaced as signalled by the group currently being processed.
 typedef void (*TRDSCallback)(byte, bool, word, word);
 
 class RDSDecoder
@@ -306,9 +302,7 @@ class RDSTranslator
         /*
         * Description:
         *   Decodes the station callsign out of the PI using the method
-        *   defined in the RBDS standard for North America. If not under RBDS,
-        *   you don't need to call this as you can directly access the decoded
-        *   version via the fields of TRDSData.programIdentifierEU. Note that
+        *   defined in the RBDS standard for North America. Note that
         *   even under RBDS, the station may have changed its PI high nibble to
         *   0x01 to signal itself as TMC capable, which will render callsign
         *   decoding impossible or errorneous.
@@ -323,6 +317,17 @@ class RDSTranslator
         *   given PI cannot be decoded according to RBDS §D.7.1
         */
         bool decodeCallSign(word programIdentifier, char* callSign);
+
+        /*
+        * Description:
+        *   Unpacks a PI value into a TRDSPI struct according to RDS §D1.
+        * Parameters:
+        *   programIdentifier - a word containing the Program Identifier value
+        *                       from RDS
+        *   unpacked - pointer to a TRDSPI struct that will receive the unpacked
+        *              data.
+        */
+        void unpackEBUPI(word programIdentifier, TRDSPI *unpacked);
 
         /*
         * Description:
