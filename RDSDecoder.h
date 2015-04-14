@@ -331,6 +331,17 @@ class RDSTranslator
 
         /*
         * Description:
+        *   Unpacks a PIN value into a TRDSPIN struct according to RDS §6.1.5.2.
+        * Parameters:
+        *   programItemNumber - a word containing the Program Item Number value
+        *                       from RDS
+        *   unpacked - pointer to a TRDSPIN struct that will receive the
+        *              unpacked data.
+        */
+        void unpackPIN(word programItemNumber, TRDSPIN *unpacked);
+
+        /*
+        * Description:
         *   Translates an RDS-TMC event distance code into a human readable
         *   measurement in km. Returns 0xFF to signal "more than 100km".
         */

@@ -68,7 +68,7 @@ void RDSDecoder::decodeRDSGroup(word block[]){
             }
             break;
         case RDS_GROUP_1A:
-            _status.linkageActuator = block[2] & RDS_SLABEL_LA;
+            _status.linkageActuator = (bool)(block[2] & RDS_SLABEL_LA);
             switch((block[2] & RDS_SLABEL_MASK) >> RDS_SLABEL_SHR) {
                 case RDS_SLABEL_TYPE_PAGINGECC:
                     _status.extendedCountryCode = lowByte(block[2]);
@@ -508,6 +508,12 @@ void RDSTranslator::unpackEBUPI(word programIdentifier, TRDSPI *unpacked) {
                         RDS_PI_COUNTRY_SHR;
     unpacked->area = (programIdentifier & RDS_PI_AREA_MASK) >> RDS_PI_AREA_SHR;
     unpacked->program = lowByte(programIdentifier);
+};
+
+void RDSTranslator::unpackPIN(word programItemNumber, TRDSPIN *unpacked) {
+    unpacked->day = (programItemNumber & RDS_PIN_DAY_MASK) >> RDS_PIN_DAY_SHR;
+    unpacked->hour = (programItemNumber & RDS_PIN_HOUR_MASK) >> RDS_PIN_HOUR_SHR;
+    unpacked->minute = programItemNumber & RDS_PIN_MINUTE_MASK;
 };
 
 byte RDSTranslator::decodeTMCDistance(byte length) {

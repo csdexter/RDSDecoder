@@ -46,6 +46,11 @@
 #define RDS_SLABEL_MASK 0x7000
 #define RDS_SLABEL_SHR 12
 #define RDS_SLABEL_VALUE_MASK 0x0FFF
+#define RDS_PIN_DAY_MASK 0xF800
+#define RDS_PIN_DAY_SHR 11
+#define RDS_PIN_HOUR_MASK 0x07C0
+#define RDS_PIN_HOUR_SHR 6
+#define RDS_PIN_MINUTE_MASK word(0x003F)
 
 //Define RDS ODA (group 3A) values and decoding masks
 #define RDS_AID_DEFAULT 0x0000
