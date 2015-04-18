@@ -96,12 +96,6 @@ typedef struct __attribute__ ((__packed__)) {
 } TRDSBlockB;
 
 typedef struct __attribute__ ((__packed__)) {
-    uint8_t day:5;
-    uint8_t hour:5;
-    uint8_t minute:6;
-} TRDSPIN;
-
-typedef struct __attribute__ ((__packed__)) {
     uint8_t romClassNumber:5;
     uint16_t serialNumber:10;
     uint8_t scopeFlag:1;
@@ -331,14 +325,15 @@ class RDSTranslator
 
         /*
         * Description:
-        *   Unpacks a PIN value into a TRDSPIN struct according to RDS §6.1.5.2.
+        *   Unpacks a PIN value into a TRDSTime struct according to
+        *   RDS §6.1.5.2.
         * Parameters:
         *   programItemNumber - a word containing the Program Item Number value
         *                       from RDS
-        *   unpacked - pointer to a TRDSPIN struct that will receive the
+        *   unpacked - pointer to a TRDSTime struct that will receive the
         *              unpacked data.
         */
-        void unpackPIN(word programItemNumber, TRDSPIN *unpacked);
+        void unpackPIN(word programItemNumber, TRDSTime *unpacked);
 
         /*
         * Description:

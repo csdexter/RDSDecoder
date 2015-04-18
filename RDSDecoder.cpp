@@ -510,10 +510,12 @@ void RDSTranslator::unpackEBUPI(word programIdentifier, TRDSPI *unpacked) {
     unpacked->program = lowByte(programIdentifier);
 };
 
-void RDSTranslator::unpackPIN(word programItemNumber, TRDSPIN *unpacked) {
-    unpacked->day = (programItemNumber & RDS_PIN_DAY_MASK) >> RDS_PIN_DAY_SHR;
-    unpacked->hour = (programItemNumber & RDS_PIN_HOUR_MASK) >> RDS_PIN_HOUR_SHR;
-    unpacked->minute = programItemNumber & RDS_PIN_MINUTE_MASK;
+void RDSTranslator::unpackPIN(word programItemNumber, TRDSTime *unpacked) {
+    unpacked->tm_mday = (programItemNumber & RDS_PIN_DAY_MASK) >>
+        RDS_PIN_DAY_SHR;
+    unpacked->tm_hour = (programItemNumber & RDS_PIN_HOUR_MASK) >>
+        RDS_PIN_HOUR_SHR;
+    unpacked->tm_min = programItemNumber & RDS_PIN_MINUTE_MASK;
 };
 
 byte RDSTranslator::decodeTMCDistance(byte length) {
