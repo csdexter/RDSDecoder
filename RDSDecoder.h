@@ -165,6 +165,8 @@ typedef struct {
     word pagingIdentification;
     TRDSAppID IRDS;
     TRDSAppID TMC;
+    TRDSAppID RTP;
+    TRDSAppID ERT;
     TRDSEON EON;
 } TRDSData;
 
@@ -363,6 +365,17 @@ class RDSTranslator
         *   minutes.
         */
         int16_t decodeTZValue(int8_t tz);
+
+        /*
+        * Description:
+        *   Unpacks a Group 3A TMC message into a TRDSTMCMessage struct.
+        * Parameters:
+        *   tmcMessage - a word containing block C of group 3A, when associated
+        *                with the AID of TMC.
+        *   unpacked - pointer to a TRDSTMCMessage struct that will receive the
+        *              unpacked data.
+        */
+        void unpackTMCMessage(word tmcMessage, TRDSTMCMessage *unpacked);
 };
 
 #endif

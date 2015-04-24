@@ -110,9 +110,19 @@ void RDSDecoder::decodeRDSGroup(word block[]){
             switch(block[3]){
                 case RDS_AID_DEFAULT:
                     if (block[1] & RDS_ODA_GROUP_MASK == RDS_GROUP_8A) {
+                      //Default use of Group 8A is TMC, so act as if we saw an
+                      //explicit mapping of TMC's AID to Group 8A.
                       _status.TMC.carriedInGroup = RDS_GROUP_8A;
                       _status.TMC.message = block[2];
                     };
+                    break;
+                case RDS_AID_ERT:
+                    _status.ERT.carriedInGroup = block[1] & RDS_ODA_GROUP_MASK;
+                    _status.ERT.message = block[2];
+                    break;
+                case RDS_AID_RTPLUS:
+                    _status.RTP.carriedInGroup = block[1] & RDS_ODA_GROUP_MASK;
+                    _status.RTP.message = block[2];
                     break;
                 case RDS_AID_IRDS:
                     _status.IRDS.carriedInGroup = block[1] & RDS_ODA_GROUP_MASK;
@@ -122,12 +132,11 @@ void RDSDecoder::decodeRDSGroup(word block[]){
                     _status.TMC.carriedInGroup = block[1] & RDS_ODA_GROUP_MASK;
                     _status.TMC.message = block[2];
                     break;
-                default:
-                    if (_callbacks[RDS_CALLBACK_AID])
-                        _callbacks[RDS_CALLBACK_AID](
-                            block[1] & RDS_ODA_GROUP_MASK, true,
-                            block[2], block[3]);
             };
+            if (_callbacks[RDS_CALLBACK_AID])
+                _callbacks[RDS_CALLBACK_AID](block[1] & RDS_ODA_GROUP_MASK,
+                                             true, block[2], block[3]);
+
             break;
         case RDS_GROUP_3B:
         case RDS_GROUP_4B:
@@ -293,7 +302,33 @@ void RDSDecoder::makePrintable(char* str){
             break;
         }
         //TODO: implement codepages from standard and do full decoding.
-        if(str[i] < 32 || str[i] > 126) str[i] = '?';
+        // <32 == not in table, kill
+        // 0x24 is generic currency symbol, not dollar sign
+        // 0x5E is long dash, not caret
+        // 0x60 is double vertical line (box drawing char), not backtick
+        // 0x7E is overbar, not tilde
+        // 0x80: a-acute, a-grave, e-acute, e-grave, i-acute, i-grave, o-acute,
+        //       o-grave, u-acute, u-grave, N-tilde, C-cedilla, S-cedilla,
+        //       scharfes-es, spanish-exclamation, dutch-IJ, a-circ, a-umlaut,
+        //       e-circ, e-umlaut, i-circ, i-umlaut, o-circ, o-umlaut, u-circ,
+        //       u-umlaut, n-tilde, c-cedilla, s-cedilla, g-breve,
+        //       turkish-i-nodot, dutch-ij, a-superscript, alpha, (c), permille,
+        //       G-breve, e-caron, n-caron, o-dprime, pi, EUR, GBP, USD, 
+        //       arrow-left, arrow-up, arrow-right, arrow-left, o-superscript,
+        //       1-superscript, 2-superscript, 3-superscript, +/-,
+        //       turkish-I-dot, n-acute, u-dprime, miu, spanish-question,
+        //       division, degree, 1/4, 1/2, 3/4, paragraph,
+        //       A,E,I,O,U{acute,grave}, R,C,S,Z{caron}, D-line, L-dot,
+        //       A,E,I,O,U{circ,umlaut}, r,c,s,z{caron}, d-line, l-dot,
+        //       A-tilde, A-circle, AE, OE, y-circ, Y-acute, O-tilde, O-slash,
+        //       Thorn, NG, R,C,S,Z{acute}, T-bar, th, a-tilde, a-circle, ae,
+        //       oe, w-circ, o-tilde, o-slash, thorn, ng, r,c,s,z{acute}, t-bar
+        if(str[i] < 32) str[i] = '?';
+        /*else if(str[i] == 0x24) str[i] = '¤';
+        else if(str[i] == 0x5E) str[i] = '―';
+        else if(str[i] == 0x60) str[i] = '║';
+        else if(str[i] == 0x7E) str[i] = ' ̄';*/
+        // add table 0x80 -> 0xFF here.
     }
 }
 
@@ -504,6 +539,8 @@ bool RDSTranslator::decodeCallSign(word programIdentifier, char* callSign){
 }
 
 void RDSTranslator::unpackEBUPI(word programIdentifier, TRDSPI *unpacked) {
+    if(!unpacked) return;
+
     unpacked->country = (programIdentifier & RDS_PI_COUNTRY_MASK) >>
                         RDS_PI_COUNTRY_SHR;
     unpacked->area = (programIdentifier & RDS_PI_AREA_MASK) >> RDS_PI_AREA_SHR;
@@ -511,6 +548,8 @@ void RDSTranslator::unpackEBUPI(word programIdentifier, TRDSPI *unpacked) {
 };
 
 void RDSTranslator::unpackPIN(word programItemNumber, TRDSTime *unpacked) {
+    if(!unpacked) return;
+
     unpacked->tm_mday = (programItemNumber & RDS_PIN_DAY_MASK) >>
         RDS_PIN_DAY_SHR;
     unpacked->tm_hour = (programItemNumber & RDS_PIN_HOUR_MASK) >>
@@ -555,5 +594,43 @@ word RDSTranslator::decodeAFFrequency(byte AF, bool FM, byte locale) {
 };
 
 int16_t RDSTranslator::decodeTZValue(int8_t tz) {
-  return (tz / 2) * 60 + (tz % 2) * 30;
+    return (tz / 2) * 60 + (tz % 2) * 30;
+};
+
+void RDSTranslator::unpackTMCMessage(word tmcMessage, TRDSTMCMessage *unpacked) {
+    if(!unpacked) return;
+    else memset(unpacked, 0x00, sizeof(TRDSTMCMessage));
+
+    unpacked->variantCode = (tmcMessage & RDS_TMC_MESSAGE_VARIANT_MASK) >>
+                            RDS_TMC_MESSAGE_VARIANT_SHR;
+    switch(unpacked->variantCode) {
+        case RDS_TMC_MESSAGE_VARIANT_LTN:
+            unpacked->locationTableNumber = (
+                tmcMessage & RDS_TMC_MESSAGE_LTN_MASK) >>
+                RDS_TMC_MESSAGE_LTN_SHR;
+            unpacked->alternateFrequencyIndicator = (bool)(
+                tmcMessage & RDS_TMC_MESSAGE_AFI);
+            unpacked->mode = (bool)(tmcMessage & RDS_TMC_MESSAGE_MODE);
+            unpacked->international = (bool)(
+                tmcMessage & RDS_TMC_MESSAGE_SCOPE_INTERNATIONAL);
+            unpacked->national = (bool)(
+                tmcMessage & RDS_TMC_MESSAGE_SCOPE_NATIONAL);
+            unpacked->regional = (bool)(
+                tmcMessage & RDS_TMC_MESSAGE_SCOPE_REGIONAL);
+            unpacked->urban = (bool)(tmcMessage & RDS_TMC_MESSAGE_SCOPE_URBAN);
+            break;
+        case RDS_TMC_MESSAGE_VARIANT_SID:
+            unpacked->gapParameter = (
+                tmcMessage & RDS_TMC_MESSAGE_GAP_MASK) >>
+                RDS_TMC_MESSAGE_GAP_SHR;
+            unpacked->serviceIdentifier = (
+                tmcMessage & RDS_TMC_MESSAGE_SID_MASK) >>
+                RDS_TMC_MESSAGE_SID_SHR;
+            unpacked->activityTime = (
+                tmcMessage & RDS_TMC_MESSAGE_TA_MASK) >> RDS_TMC_MESSAGE_TA_SHR;
+            unpacked->windowTime = (
+                tmcMessage & RDS_TMC_MESSAGE_TW_MASK) >> RDS_TMC_MESSAGE_TW_SHR;
+            unpacked->delayTime = tmcMessage & RDS_TMC_MESSAGE_TD_MASK;
+            break;
+    };
 };
