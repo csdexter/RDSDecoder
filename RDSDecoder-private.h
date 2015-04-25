@@ -54,10 +54,11 @@
 
 //Define RDS ODA (group 3A) values and decoding masks
 #define RDS_AID_DEFAULT 0x0000
+#define RDS_AID_TMC_TEST 0x0D45
 #define RDS_AID_ERT 0x6552
 #define RDS_AID_RTPLUS 0x4BD7
 #define RDS_AID_IRDS 0xC563
-#define RDS_AID_TMC 0xCD46 // 0xCD45 and 0xCD47 also seen in the wild
+#define RDS_AID_TMC 0xCD46 // 0xCD47 also seen in the wild
 #define RDS_ODA_GROUP_MASK 0x1F
 
 //Define TMC Message (group 3A) decoding masks
@@ -67,6 +68,7 @@
 #define RDS_TMC_MESSAGE_VARIANT_SID 0x1
 #define RDS_TMC_MESSAGE_LTN_MASK 0x0FC0
 #define RDS_TMC_MESSAGE_LTN_SHR 6
+#define RDS_TMC_MESSAGE_LTN_ENCRYPTED 0x00
 #define RDS_TMC_MESSAGE_AFI word(0x0020)
 #define RDS_TMC_MESSAGE_MODE word(0x0010)
 #define RDS_TMC_MESSAGE_SCOPE_INTERNATIONAL word(0x0008)

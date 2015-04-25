@@ -376,6 +376,37 @@ class RDSTranslator
         *              unpacked data.
         */
         void unpackTMCMessage(word tmcMessage, TRDSTMCMessage *unpacked);
+
+        /*
+        * Description:
+        *   Decrypts a TMC location table index according to ISO 14819-6 §9.4.
+        * Parameters:
+        *   location - a word containing the encrypted location table index.
+        *   key - a word containing the packed decryption parameters, in the
+        *         order given in ISO 14819-6 Table 4.
+        *   xorValue - a byte containing the standalone XOR value for
+        *              decryption.
+        *   start - a nibble containing the start bit value for decryption.
+        *   rol - a nibble containing the argument of the bitwise rotate left
+        *         operation for decryption.
+        *   encId - a nibble containing the line index into the Encryption Table
+        *           where to find the decryption key.
+        *   table - pointer to a table of encryption keys, either an array of 32
+        *           words which are the packed decryption parameters for one
+        *           Service Key; or an array of 8x32 words which are all the
+        *           Service Keys.
+        *   in_flash - bool, true if the table should be looked-up in Flash as
+        *              opposed to RAM.
+        *   serviceKey - a nibble containing the index of the Service Key to
+        *                use for decryption.
+        */
+        word decryptLocation(word location, word key);
+        word decryptLocation(word location, byte xorValue, byte start,
+                             byte rol);
+        word decryptLocation(word location, byte encId, word table[],
+                             bool in_flash=false);
+        word decryptLocation(word location, byte serviceKey, byte encId,
+                             word table[][32], bool in_flash=false);
 };
 
 #endif

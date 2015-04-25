@@ -171,6 +171,7 @@ typedef TRDSODAGroup TRDSGroup7B;
 typedef struct __attribute__ ((__packed__)) {
   TRDSBlock1 block1;
   TRDSBlock2 block2;
+  // X4-X0
   uint8_t systemMessage:1;
   union {
     uint8_t variantCode:4;
@@ -182,7 +183,18 @@ typedef struct __attribute__ ((__packed__)) {
       };
     };
   };
+  // Y15-Y0 + Z15-Z0
   union {
+    //Encrypted TMC
+    struct {
+      uint8_t encVariantCode:3;
+      uint8_t test:2;
+      uint8_t encServiceIdentifier:6;
+      uint8_t endId:5;
+      uint8_t encLocationTableNumber:6;
+      uint16_t reserved:10;
+    };
+    //Non-system messages
     struct {
       union {
         uint8_t first:1;
@@ -203,6 +215,7 @@ typedef struct __attribute__ ((__packed__)) {
       };
     };
     char serviceProviderName[4];
+    //System messages
     struct {
       union {
         uint8_t alternativeFrequency[2];
@@ -247,6 +260,10 @@ const uint8_t RDS_TMC_D2LongerlastingPersistence[8] = {
 #define RDS_8A_VARIANT_EON_TM 0x07
 #define RDS_8A_VARIANT_EON_PI 0x08
 #define RDS_8A_VARIANT_EON_EX 0x09
+
+#define RDS_8A_ENC_TEST_CLEAR 0x0
+#define RDS_8A_ENC_TEST_STATIC 0x1
+#define RDS_8A_ENC_TEST_DYNAMIC 0x3
 
 typedef TRDSODAGroup TRDSGroup8B;
 

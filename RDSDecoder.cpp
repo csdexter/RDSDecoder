@@ -23,6 +23,7 @@
 #  define lowByte(x) (uint8_t)((x) & 0xFF)
 #  define highByte(x) (uint8_t)(((x) >> 8) & 0xFF)
 #  define pgm_read_byte(x) (uint8_t)(*x)
+#  define pgm_read_word(x) (uint16_t)(*x)
 #  define pgm_read_ptr(x) (void *)(*x)
 # endif
 #else
@@ -632,5 +633,35 @@ void RDSTranslator::unpackTMCMessage(word tmcMessage, TRDSTMCMessage *unpacked) 
                 tmcMessage & RDS_TMC_MESSAGE_TW_MASK) >> RDS_TMC_MESSAGE_TW_SHR;
             unpacked->delayTime = tmcMessage & RDS_TMC_MESSAGE_TD_MASK;
             break;
+    };
+};
+
+word RDSTranslator::decryptLocation(word location, word key) {
+    return decryptLocation(location, highByte(key), (lowByte(key) & 0xF0) >> 4,
+                           lowByte(key) & 0x0F);
+};
+
+word RDSTranslator::decryptLocation(word location, byte xorValue, byte start,
+                                    byte rol) {
+    uint16_t result = (word(xorValue) << start) ^ location;
+    return (result >> (16 - rol)) | (result << rol);
+};
+
+word RDSTranslator::decryptLocation(word location, byte encId, word table[],
+                                    bool in_flash) {
+    if(in_flash) {
+        return decryptLocation(location, pgm_read_word(&table[encId]));
+    } else {
+        return decryptLocation(location, table[encId]);
+    };
+};
+
+word RDSTranslator::decryptLocation(word location, byte serviceKey, byte encId,
+                                    word table[][32], bool in_flash) {
+    if(in_flash) {
+        return decryptLocation(location,
+                               pgm_read_word(&table[serviceKey][encId]));
+    } else {
+        return decryptLocation(location, table[serviceKey][encId]);
     };
 };
