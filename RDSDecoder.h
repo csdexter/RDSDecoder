@@ -58,7 +58,8 @@
 #define RDS_CALLBACK_ODA 0x03
 #define RDS_CALLBACK_EON 0x04
 #define RDS_CALLBACK_RT 0x05
-#define RDS_CALLBACK_LAST 0x06
+#define RDS_CALLBACK_TMC 0x06
+#define RDS_CALLBACK_LAST RDS_CALLBACK_TMC
 
 //This holds time of day as received via RDS. Mimicking struct tm from
 //<time.h> for familiarity.
@@ -82,18 +83,6 @@ typedef struct __attribute__ ((__packed__)) {
     uint8_t area:4;
     byte program;
 } TRDSPI;
-
-typedef struct __attribute__ ((__packed__)) {
-    union {
-        struct {
-            uint8_t groupType:4;
-            uint8_t version:1;
-        };
-        uint8_t groupNumber:5;
-    };
-    uint8_t trafficProgram:1;
-    uint8_t programType:5;
-} TRDSBlockB;
 
 typedef struct __attribute__ ((__packed__)) {
     uint8_t romClassNumber:5;
@@ -123,6 +112,12 @@ typedef struct __attribute__ ((__packed__)) {
     };
   };
 } TRDSTMCMessage;
+
+typedef struct __attribute__ ((__packed__)) {
+    uint8_t magic:6;
+    uint8_t country:4;
+    uint8_t locationTableNumber:6;
+} TRDSTMCFLT;
 
 typedef struct {
     byte carriedInGroup;
@@ -198,6 +193,10 @@ typedef struct {
 //    true if it was a 2A group that triggered this RT change. The callee is
 //    expected to call getRDSData() to fetch the current RT before it gets
 //    replaced as signalled by the group currently being processed.
+//RDS_CALLBACK_TMC:
+//    First parameter is the first 5 bits of the TMC message, the second is
+//    always true and the last two contain the remaining 32 bits of the TMC
+//    message.
 typedef void (*TRDSCallback)(byte, bool, word, word);
 
 class RDSDecoder
@@ -254,7 +253,7 @@ class RDSDecoder
         TRDSData _status;
         TRDSTime _time;
         bool _rdstextab, _rdsptynab, _havect;
-        TRDSCallback _callbacks[RDS_CALLBACK_LAST];
+        TRDSCallback _callbacks[RDS_CALLBACK_LAST + 1];
 
         /*
         * Description:
@@ -407,6 +406,16 @@ class RDSTranslator
                              bool in_flash=false);
         word decryptLocation(word location, byte serviceKey, byte encId,
                              word table[][32], bool in_flash=false);
+
+        /*
+        * Description:
+        *   Unpacks a TMC FLT code into a TRDSTMCFLT struct.
+        * Parameters:
+        *   flt - a word containing the FTL code.
+        *   unpacked - pointer to a TRDSTMCFLT struc that will receive the
+        *              unpacked data.
+        */
+        void unpackTMCFLT(word flt, TRDSTMCFLT *unpacked);
 };
 
 #endif

@@ -201,7 +201,9 @@ void RDSDecoder::decodeRDSGroup(word block[]){
             //TODO: read the standard and do Radio Paging
             break;
         case RDS_GROUP_8A:
-            //TODO: read the standard and do TMC listing
+            if (_callbacks[RDS_CALLBACK_TMC])
+                _callbacks[RDS_CALLBACK_TMC](
+                    block[1] & RDS_ODA_GROUP_MASK, true, block[2], block[3]);
             break;
         case RDS_GROUP_9A:
             //NOTE: EWS is defined per-country which is a polite way of saying
@@ -664,4 +666,19 @@ word RDSTranslator::decryptLocation(word location, byte serviceKey, byte encId,
     } else {
         return decryptLocation(location, table[serviceKey][encId]);
     };
+};
+
+void RDSTranslator::unpackTMCFLT(word flt, TRDSTMCFLT *unpacked) {
+    if((flt & RDS_TMC_MESSAGE_LOCATION_FOREIGN_MASK) !=
+       RDS_TMC_MESSAGE_LOCATION_FOREIGN_MASK)
+        //Not a FLT code.
+        return;
+    if(!unpacked)
+        return;
+    unpacked->magic = (flt & RDS_TMC_MESSAGE_LOCATION_FOREIGN_MASK) >>
+                      RDS_TMC_MESSAGE_LOCATION_FOREIGN_SHR;
+    unpacked->country = (flt & RDS_TMC_MESSAGE_LOCATION_FOREIGN_COUNTRY_MASK) >>
+                        RDS_TMC_MESSAGE_LOCATION_FOREIGN_COUNTRY_SHR;
+    unpacked->locationTableNumber = flt &
+                                    RDS_TMC_MESSAGE_LOCATION_FOREIGN_LTN_MASK;
 };
