@@ -701,7 +701,7 @@ void RDSTranslator::unpackTMCMessage8(byte tmcXbits, word tmcYbits,
               twochars = swab(tmcYbits);
               strncpy(unpacked->serviceProviderName, (char *)&twochars, 2);
               twochars = swab(tmcZbits);
-              strncpy(unpacked->serviceProviderName, (char *)&twochars, 2);
+              strncpy(&unpacked->serviceProviderName[2], (char *)&twochars, 2);
               break;
           case RDS_TMC_MESSAGE_VARIANT_EON_AF:
               unpacked->alternativeFrequency[0] = highByte(tmcYbits);
@@ -748,23 +748,44 @@ void RDSTranslator::unpackTMCMessage8(byte tmcXbits, word tmcYbits,
             //Same position as duration in single-group messages
             unpacked->continuationIndicator = tmcXbits &
                                               RDS_TMC_MESSAGE_DURATION_MASK;
-            //Same position as diversion in single-group messages
-            unpacked->first = (bool)(tmcYbits & RDS_TMC_MESSAGE_DIVERSION);
-            if(unpacked->first) {
-                //Same format as single-group messages
-                unpacked->direction = (bool)(
-                    tmcYbits & RDS_TMC_MESSAGE_DIRECTION);
-                unpacked->extent = (tmcYbits & RDS_TMC_MESSAGE_EXTENT_MASK) >>
-                                  RDS_TMC_MESSAGE_EXTENT_SHR;
-                unpacked->event = tmcYbits & RDS_TMC_MESSAGE_EVENT_MASK;
-                unpacked->location = tmcZbits;
+            if(unpacked->continuationIndicator) {
+                //Same position as diversion in single-group messages
+                unpacked->first = (bool)(tmcYbits & RDS_TMC_MESSAGE_DIVERSION);
+                if(unpacked->first) {
+                    //Same format as single-group messages
+                    unpacked->direction = (bool)(
+                        tmcYbits & RDS_TMC_MESSAGE_DIRECTION);
+                    unpacked->extent = (
+                        tmcYbits & RDS_TMC_MESSAGE_EXTENT_MASK) >>
+                        RDS_TMC_MESSAGE_EXTENT_SHR;
+                    unpacked->event = tmcYbits & RDS_TMC_MESSAGE_EVENT_MASK;
+                    unpacked->location = tmcZbits;
+                } else {
+                    //Same position as direction in single-group messages.
+                    unpacked->second = (bool)(tmcYbits & RDS_TMC_MESSAGE_DIRECTION);
+                    unpacked->sequence = (
+                        tmcYbits & RDS_TMC_MESSAGE_GSI_MASK) >>
+                        RDS_TMC_MESSAGE_GSI_SHR;
+                    unpacked->data = (
+                      (tmcYbits & RDS_TMC_MESSAGE_CONTAINER_MASK) <<
+                      RDS_TMC_MESSAGE_CONTAINER_SHL) | tmcZbits;
+                };
             } else {
-                //Same position as direction in single-group messages.
-                unpacked->second = (bool)(tmcYbits & RDS_TMC_MESSAGE_DIRECTION);
-                unpacked->sequence = (tmcYbits & RDS_TMC_MESSAGE_GSI_MASK) >>
-                                     RDS_TMC_MESSAGE_GSI_SHR;
-                unpacked->data = ((tmcYbits & RDS_TMC_MESSAGE_CONTAINER_MASK) <<
-                                  RDS_TMC_MESSAGE_CONTAINER_SHL) | tmcZbits;
+                unpacked->encVariantCode = (
+                    tmcYbits & RDS_TMC_MESSAGE_ENC_VARIANT_MASK) >>
+                    RDS_TMC_MESSAGE_ENC_VARIANT_SHR;
+                if(!unpacked->encVariantCode) {
+                    unpacked->test = (
+                      tmcYbits & RDS_TMC_MESSAGE_EAG_TEST_MASK) >>
+                      RDS_TMC_MESSAGE_EAG_TEST_SHR;
+                    unpacked->encServiceIdentifier = (
+                      tmcYbits & RDS_TMC_MESSAGE_EAG_SID_MASK) >>
+                      RDS_TMC_MESSAGE_EAG_SID_SHR;
+                    unpacked->encId = tmcYbits & RDS_TMC_MESSAGE_EAG_ENCID_MASK;
+                    unpacked->encLocationTableNumber = (
+                      tmcZbits & RDS_TMC_MESSAGE_EAG_LTNBE_MASK) >>
+                      RDS_TMC_MESSAGE_EAG_LTNBE_SHR;
+                };
             };
         };
     };

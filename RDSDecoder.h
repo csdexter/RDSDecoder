@@ -50,10 +50,17 @@
 #define RDS_AF_NODATA 0xE0
 #define RDS_AF_FOLLOWS_FM_FIRST 0xE1
 #define RDS_AF_FOLLOWS_AM 0xFA
-#define RDS_TMC_EMG_TEST_CLEAR 0x0
-#define RDS_TMC_EMC_TEST_STATIC 0x1
-#define RDS_TMC_EMG_TEST_DYNAMIC 0x3
+#define RDS_TMC_EAG_TEST_CLEAR 0x0
+#define RDS_TMC_EAG_TEST_STATIC 0x1
+#define RDS_TMC_EAG_TEST_DYNAMIC 0x3
 #define RDS_TMC_ANY_SID 0x00
+#define RDS_TMC_MESSAGE_VARIANT_SPN_A 0x4
+#define RDS_TMC_MESSAGE_VARIANT_SPN_B 0x5
+#define RDS_TMC_MESSAGE_VARIANT_EON_AF 0x6
+#define RDS_TMC_MESSAGE_VARIANT_EON_TM 0x7
+#define RDS_TMC_MESSAGE_VARIANT_EON_PI 0x8
+#define RDS_TMC_MESSAGE_VARIANT_EON_EX 0x9
+#define RDS_TMC_MESSAGE_ENC_VARIANT_EAG 0x0
 
 //RDS Decoder callback types
 #define RDS_CALLBACK_AF 0x00
@@ -137,7 +144,7 @@ typedef struct __attribute__ ((__packed__)) {
       uint8_t encVariantCode:3;
       uint8_t test:2;
       uint8_t encServiceIdentifier:6;
-      uint8_t endId:5;
+      uint8_t encId:5;
       uint8_t encLocationTableNumber:6;
       uint16_t reserved:10;
     };
