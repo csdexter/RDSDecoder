@@ -50,6 +50,10 @@
 #define RDS_AF_NODATA 0xE0
 #define RDS_AF_FOLLOWS_FM_FIRST 0xE1
 #define RDS_AF_FOLLOWS_AM 0xFA
+#define RDS_TMC_EMG_TEST_CLEAR 0x0
+#define RDS_TMC_EMC_TEST_STATIC 0x1
+#define RDS_TMC_EMG_TEST_DYNAMIC 0x3
+#define RDS_TMC_ANY_SID 0x00
 
 //RDS Decoder callback types
 #define RDS_CALLBACK_AF 0x00
@@ -111,7 +115,75 @@ typedef struct __attribute__ ((__packed__)) {
       uint8_t delayTime:2;
     };
   };
-} TRDSTMCMessage;
+} TRDSTMCMessage3;
+
+typedef struct __attribute__ ((__packed__)) {
+  // bits X4-X0
+  uint8_t systemMessage:1;
+  union {
+    uint8_t variantCode:4;
+    struct {
+      uint8_t single:1;
+      union {
+        uint8_t duration:3;
+        uint8_t continuationIndicator:3;
+      };
+    };
+  };
+  // bits Y15-Y0 + Z15-Z0
+  union {
+    //Encrypted TMC
+    struct {
+      uint8_t encVariantCode:3;
+      uint8_t test:2;
+      uint8_t encServiceIdentifier:6;
+      uint8_t endId:5;
+      uint8_t encLocationTableNumber:6;
+      uint16_t reserved:10;
+    };
+    //Non-system messages
+    struct {
+      union {
+        uint8_t first:1;
+        uint8_t diversion:1;
+      };
+      union {
+        struct {
+          uint8_t direction:1;
+          uint8_t extent:3;
+          uint16_t event:11;
+          uint16_t location;
+        };
+        struct {
+          uint8_t second:1;
+          uint8_t sequence:2;
+          uint32_t data:28;
+        };
+      };
+    };
+    //System messages
+    char serviceProviderName[4];
+    struct {
+      union {
+        uint8_t alternativeFrequency[2];
+        struct {
+          uint8_t tuningFrequency;
+          uint8_t mappedFrequency;
+        };
+        word programIdentifier1;
+        struct {
+          uint8_t locationTableNumber:6;
+          uint8_t international:1;
+          uint8_t national:1;
+          uint8_t regional:1;
+          uint8_t urban:1;
+          uint8_t serviceIdentifier:6;
+        };
+      };
+      word programIdentifier2;
+    };
+  };
+} TRDSTMCMessage8;
 
 typedef struct __attribute__ ((__packed__)) {
     uint8_t magic:6;
@@ -367,14 +439,14 @@ class RDSTranslator
 
         /*
         * Description:
-        *   Unpacks a Group 3A TMC message into a TRDSTMCMessage struct.
+        *   Unpacks a Group 3A TMC message into a TRDSTMCMessage3 struct.
         * Parameters:
         *   tmcMessage - a word containing block C of group 3A, when associated
         *                with the AID of TMC.
-        *   unpacked - pointer to a TRDSTMCMessage struct that will receive the
+        *   unpacked - pointer to a TRDSTMCMessage3 struct that will receive the
         *              unpacked data.
         */
-        void unpackTMCMessage(word tmcMessage, TRDSTMCMessage *unpacked);
+        void unpackTMCMessage3(word tmcMessage, TRDSTMCMessage3 *unpacked);
 
         /*
         * Description:
@@ -416,6 +488,19 @@ class RDSTranslator
         *              unpacked data.
         */
         void unpackTMCFLT(word flt, TRDSTMCFLT *unpacked);
+
+        /*
+        * Description:
+        *   Unpacks a Group 8A TMC message into a TRDSTMCMessage8 struct.
+        * Parameters:
+        *   tmcXbits - a byte containing bits X4-X0 of the TMC message.
+        *   tmcYbits - a word containing bits Y15-Y0 of the TMC message.
+        *   tmcZbits - a word containing bits Z15-Z0 of the TMC message.
+        *   unpacked - pointer to a TRDSTMCMessage8 struct that will receive the
+        *              unpacked data.
+        */
+        void unpackTMCMessage8(byte tmcXbits, word tmcYbits, word tmcZbits,
+                               TRDSTMCMessage8 *unpacked);
 };
 
 #endif

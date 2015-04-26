@@ -600,9 +600,10 @@ int16_t RDSTranslator::decodeTZValue(int8_t tz) {
     return (tz / 2) * 60 + (tz % 2) * 30;
 };
 
-void RDSTranslator::unpackTMCMessage(word tmcMessage, TRDSTMCMessage *unpacked) {
+void RDSTranslator::unpackTMCMessage3(word tmcMessage,
+                                      TRDSTMCMessage3 *unpacked) {
     if(!unpacked) return;
-    else memset(unpacked, 0x00, sizeof(TRDSTMCMessage));
+    else memset(unpacked, 0x00, sizeof(TRDSTMCMessage3));
 
     unpacked->variantCode = (tmcMessage & RDS_TMC_MESSAGE_VARIANT_MASK) >>
                             RDS_TMC_MESSAGE_VARIANT_SHR;
@@ -681,4 +682,55 @@ void RDSTranslator::unpackTMCFLT(word flt, TRDSTMCFLT *unpacked) {
                         RDS_TMC_MESSAGE_LOCATION_FOREIGN_COUNTRY_SHR;
     unpacked->locationTableNumber = flt &
                                     RDS_TMC_MESSAGE_LOCATION_FOREIGN_LTN_MASK;
+};
+
+void RDSTranslator::unpackTMCMessage8(byte tmcXbits, word tmcYbits,
+                                      word tmcZbits,
+                                      TRDSTMCMessage8 *unpacked) {
+    if(!unpacked)
+        return;
+
+    unpacked->systemMessage = (bool)(tmcXbits & RDS_TMC_MESSAGE_SYSTEM);
+    if(unpacked->systemMessage) {
+        unpacked->variantCode = tmcXbits & ~RDS_TMC_MESSAGE_SYSTEM;
+        switch(unpacked->variantCode) {
+          case RDS_TMC_MESSAGE_VARIANT_SPN_A:
+          case RDS_TMC_MESSAGE_VARIANT_SPN_B:
+              word twochars = swab(tmcYbits);
+              strncpy(unpacked->serviceProviderName, (char *)&twochars, 2);
+              twochars = swab(tmcZbits);
+              strncpy(unpacked->serviceProviderName, (char *)&twochars, 2);
+              break;
+          case RDS_TMC_MESSAGE_VARIANT_EON_AF:
+              unpacked->alternativeFrequency[0] = highByte(tmcYbits);
+              unpacked->alternativeFrequency[1] = lowByte(tmcYbits);
+              unpacked->programIdentifier2 = tmcZbits;
+              break;
+          case RDS_TMC_MESSAGE_VARIANT_EON_TM:
+              unpacked->tuningFrequency = highByte(tmcYbits);
+              unpacked->mappedFrequency = lowByte(tmcYbits);
+              unpacked->programIdentifier2 = tmcZbits;
+              break;
+          case RDS_TMC_MESSAGE_VARIANT_EON_PI:
+              unpacked->programIdentifier1 = tmcYbits;
+              unpacked->programIdentifier2 = tmcZbits;
+              break;
+          case RDS_TMC_MESSAGE_VARIANT_EON_EX:
+              //TODO: add masks and shifts to -private.h and write this!
+              break;
+        };
+    } else {
+        unpacked->single = (bool)(tmcXbits & RDS_TMC_MESSAGE_SINGLE);
+        if(unpacked->single) {
+            unpacked->duration = tmcXbits & RDS_TMC_MESSAGE_DURATION_MASK;
+            unpacked->diversion = (bool)(tmcYbits & RDS_TMC_MESSAGE_DIVERSION);
+            unpacked->direction = (bool)(tmcYbits & RDS_TMC_MESSAGE_DIRECTION);
+            unpacked->extent = (tmcYbits & RDS_TMC_MESSAGE_EXTENT_MASK) >>
+                               RDS_TMC_MESSAGE_EXTENT_SHR;
+            unpacked->event = tmcYbits & RDS_TMC_MESSAGE_EVENT_MASK;
+            unpacked->location = tmcZbits;
+        } else {
+            //TODO: write multi-group messsage support!
+        };
+    };
 };
