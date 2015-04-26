@@ -474,10 +474,10 @@ class RDSTranslator
         word decryptLocation(word location, word key);
         word decryptLocation(word location, byte xorValue, byte start,
                              byte rol);
-        word decryptLocation(word location, byte encId, word table[],
+        word decryptLocation(word location, byte encId, const word table[],
                              bool in_flash=false);
         word decryptLocation(word location, byte serviceKey, byte encId,
-                             word table[][32], bool in_flash=false);
+                             const word table[][32], bool in_flash=false);
 
         /*
         * Description:
@@ -501,6 +501,20 @@ class RDSTranslator
         */
         void unpackTMCMessage8(byte tmcXbits, word tmcYbits, word tmcZbits,
                                TRDSTMCMessage8 *unpacked);
+
+        /*
+        * Description:
+        *   Glues together multiple 28 bit containers in place as used in TMC
+        *   multi-group messages
+        * Parameters:
+        *   slices - an array of 5 uint32_t expected to contain TMC message
+        *            container slices in their lower 28 bits that are to be
+        *            glued in place (via SHL) to get an array of 5 uint32_t that
+        *            contains a contiguous TMC message container. As per
+        *            ISO 14819-1 §7.6.2, the unused bits at the end of the
+        *            container will be set to zero.
+        */
+        void glueTMCContainerSlices(uint32_t slices[5]);
     private:
         /*
         * Description:

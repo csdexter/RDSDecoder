@@ -650,8 +650,8 @@ word RDSTranslator::decryptLocation(word location, byte xorValue, byte start,
     return (result >> (16 - rol)) | (result << rol);
 };
 
-word RDSTranslator::decryptLocation(word location, byte encId, word table[],
-                                    bool in_flash) {
+word RDSTranslator::decryptLocation(word location, byte encId,
+                                    const word table[], bool in_flash) {
     if(in_flash) {
         return decryptLocation(location, pgm_read_word(&table[encId]));
     } else {
@@ -660,7 +660,7 @@ word RDSTranslator::decryptLocation(word location, byte encId, word table[],
 };
 
 word RDSTranslator::decryptLocation(word location, byte serviceKey, byte encId,
-                                    word table[][32], bool in_flash) {
+                                    const word table[][32], bool in_flash) {
     if(in_flash) {
         return decryptLocation(location,
                                pgm_read_word(&table[serviceKey][encId]));
@@ -768,4 +768,16 @@ void RDSTranslator::unpackTMCMessage8(byte tmcXbits, word tmcYbits,
             };
         };
     };
+};
+
+void RDSTranslator::glueTMCContainerSlices(uint32_t slices[5]) {
+    slices[0] <<= 4;
+    slices[0] |= (slices[1] & 0x0F000000) >> 24;
+    slices[1] <<= 8;
+    slices[1] |= (slices[2] & 0x0FF00000) >> 20;
+    slices[2] <<= 12;
+    slices[2] |= (slices[3] & 0x0FFF0000) >> 16;
+    slices[3] <<= 16;
+    slices[3] |= (slices[4] & 0x0FFFF000) >> 12;
+    slices[4] <<= 20;
 };
