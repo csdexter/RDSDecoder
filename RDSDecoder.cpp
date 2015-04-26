@@ -781,3 +781,51 @@ void RDSTranslator::glueTMCContainerSlices(uint32_t slices[5]) {
     slices[3] |= (slices[4] & 0x0FFFF000) >> 12;
     slices[4] <<= 20;
 };
+
+word RDSTranslator::readFromTMCContainer(const uint32_t slices[5],
+                                         TRDSTMCContainerIndex *fp, byte size) {
+    if(!fp || size > 16)
+        return 0x0000;
+    //Enforce order of evaluation
+    if(fp->sliceIndex == 6)
+        return 0x0000;
+    if(!(fp->bitIndex || fp->sliceIndex)) {
+        //First call, set pointer to start of container
+        fp->bitIndex = 31;
+        fp->sliceIndex = 1;
+    };
+
+    uint16_t result = 0x0000;
+
+    if(size > fp->bitIndex + 1) {
+        //Split fetch
+        result = slices[fp->sliceIndex - 1] & (1U << fp->bitIndex) - 1;
+        result <<= size - (fp->bitIndex + 1);
+        if(fp->sliceIndex < 5) {
+            fp->sliceIndex++;
+            result |= ((1U << (size - fp->bitIndex)) - 1 <<
+                      (31 - (size - fp->bitIndex) + 1)) &
+                      slices[fp->sliceIndex - 1];
+            fp->bitIndex = 31 - (size - fp->bitIndex);
+        } else
+            //Simulate EOF.
+            fp->sliceIndex = 6;
+    } else {
+        //Single fetch
+        result = slices[fp->sliceIndex - 1] >> (fp->bitIndex - size + 1);
+        result &= (1U << size) - 1;
+        if(size == fp->bitIndex + 1) {
+            if(fp->sliceIndex < 5) {
+                //We read the last bit from the slice, moving on to the next.
+                fp->bitIndex = 31;
+                fp->sliceIndex++;
+            } else {
+                //Simulate EOF.
+                fp->sliceIndex = 6;
+            };
+        } else
+            fp->bitIndex -= size;
+    };
+
+    return result;
+};

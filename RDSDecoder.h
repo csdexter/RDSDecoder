@@ -191,6 +191,11 @@ typedef struct __attribute__ ((__packed__)) {
     uint8_t locationTableNumber:6;
 } TRDSTMCFLT;
 
+typedef struct __attribute__ ((__packed__)) {
+    uint8_t bitIndex:5;
+    uint8_t sliceIndex:3;
+} TRDSTMCContainerIndex;
+
 typedef struct {
     byte carriedInGroup;
     word message;
@@ -515,6 +520,26 @@ class RDSTranslator
         *            container will be set to zero.
         */
         void glueTMCContainerSlices(uint32_t slices[5]);
+
+        /*
+        * Description:
+        *   Reads from a TMC multi-group message bit container.
+        * Parameters:
+        *   slices - an array of 5 uint32_t containing the TMC message bit
+        *            container.
+        *   fp - a pointer to a TRDSTMCContainerIndex struct holding the current
+        *        read pointer for the container. On the first invocation (for a
+        *        new container), zero out the struct to signal that reading
+        *        should start from the beginning of the container; on subsequent
+        *        invocations, pass the same struct to advance from the last read
+        *        location.
+        *   size - a nibble containing the number of bits to read from the
+        *          container.
+        * Returns:
+        *   The bits read from the container, LSB-aligned to a word.
+        */
+        word readFromTMCContainer(const uint32_t slices[5],
+                                  TRDSTMCContainerIndex *fp, byte size);
     private:
         /*
         * Description:
