@@ -501,6 +501,17 @@ class RDSTranslator
         */
         void unpackTMCMessage8(byte tmcXbits, word tmcYbits, word tmcZbits,
                                TRDSTMCMessage8 *unpacked);
+    private:
+        /*
+        * Description:
+        *   When treating word values as two characters, RDS and AVR have a
+        *   problem because RDS uses big endian semantics while the AVR is
+        *   little endian. Hence this function to translate between the two
+        *   worlds.
+        * Parameters:
+        *   value - the word to be switched
+        */
+        inline word swab(word value) { return (value >> 8) | (value << 8); }
 };
 
 #endif

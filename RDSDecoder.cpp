@@ -692,11 +692,13 @@ void RDSTranslator::unpackTMCMessage8(byte tmcXbits, word tmcYbits,
 
     unpacked->systemMessage = (bool)(tmcXbits & RDS_TMC_MESSAGE_SYSTEM);
     if(unpacked->systemMessage) {
+        word twochars;
+
         unpacked->variantCode = tmcXbits & ~RDS_TMC_MESSAGE_SYSTEM;
         switch(unpacked->variantCode) {
           case RDS_TMC_MESSAGE_VARIANT_SPN_A:
           case RDS_TMC_MESSAGE_VARIANT_SPN_B:
-              word twochars = swab(tmcYbits);
+              twochars = swab(tmcYbits);
               strncpy(unpacked->serviceProviderName, (char *)&twochars, 2);
               twochars = swab(tmcZbits);
               strncpy(unpacked->serviceProviderName, (char *)&twochars, 2);
