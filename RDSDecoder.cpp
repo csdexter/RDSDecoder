@@ -850,3 +850,52 @@ word RDSTranslator::readFromTMCContainer(const uint32_t slices[5],
 
     return result;
 };
+
+bool RDSTranslator::readNextTMCLabel(const uint32_t slices[5],
+                                     TRDSTMCContainerIndex *fp,
+                                     TRDSTMCLabel *label) {
+    if(!(fp || label))
+        return false;
+    //Enforce order of evaluation
+    if(fp->sliceIndex == 6)
+        //Container at EOF.
+        return false;
+
+    label->type = readFromTMCContainer(slices, fp, 4);
+    switch(label->type) {
+      case RDS_TMC_LABEL_RESERVED2:
+        //Label 15 has an undefined size so nothing can exist beyond it: fake
+        //EOF status.
+        fp->sliceIndex == 6;
+        break;
+      case RDS_TMC_LABEL_SEPARATOR:
+        //Label 14 has a size of zero.
+        break;
+      case RDS_TMC_LABEL_DURATION:
+      case RDS_TMC_LABEL_CONTROL:
+        label->value = readFromTMCContainer(slices, fp, 3);
+        break;
+      case RDS_TMC_LABEL_LENGTH:
+      case RDS_TMC_LABEL_SPEED:
+      case RDS_TMC_LABEL_QUANTIFIER_5:
+        label->value = readFromTMCContainer(slices, fp, 5);
+        break;
+      case RDS_TMC_LABEL_QUANTIFIER_8:
+      case RDS_TMC_LABEL_SUPPLEMENTARY:
+      case RDS_TMC_LABEL_START:
+      case RDS_TMC_LABEL_STOP:
+        label->value = readFromTMCContainer(slices, fp, 8);
+        break;
+      case RDS_TMC_LABEL_ADDITIONAL:
+        label->value = readFromTMCContainer(slices, fp, 11);
+        break;
+      case RDS_TMC_LABEL_DIVERSION:
+      case RDS_TMC_LABEL_DESTINATION:
+      case RDS_TMC_LABEL_RESERVED1:
+      case RDS_TMC_LABEL_XREF:
+        label->value = readFromTMCContainer(slices, fp, 16);
+        break;
+    };
+
+    return true;
+};

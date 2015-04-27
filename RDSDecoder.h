@@ -61,6 +61,30 @@
 #define RDS_TMC_MESSAGE_VARIANT_EON_PI 0x8
 #define RDS_TMC_MESSAGE_VARIANT_EON_EX 0x9
 #define RDS_TMC_MESSAGE_ENC_VARIANT_EAG 0x0
+#define RDS_TMC_LABEL_DURATION 0x0
+#define RDS_TMC_LABEL_CONTROL 0x1
+#define RDS_TMC_LABEL_LENGTH 0x2
+#define RDS_TMC_LABEL_SPEED 0x3
+#define RDS_TMC_LABEL_QUANTIFIER_5 0x4
+#define RDS_TMC_LABEL_QUANTIFIER_8 0x5
+#define RDS_TMC_LABEL_SUPPLEMENTARY 0x6
+#define RDS_TMC_LABEL_START 0x7
+#define RDS_TMC_LABEL_STOP 0x8
+#define RDS_TMC_LABEL_ADDITIONAL 0x9
+#define RDS_TMC_LABEL_DIVERSION 0xA
+#define RDS_TMC_LABEL_DESTINATION 0xB
+#define RDS_TMC_LABEL_RESERVED1 0xC
+#define RDS_TMC_LABEL_XREF 0xD
+#define RDS_TMC_LABEL_SEPARATOR 0xE
+#define RDS_TMC_LABEL_RESERVED2 0xF
+#define RDS_TMC_L1_URGENCY_INC 0x00
+#define RDS_TMC_L1_URGENCY_DEC 0x01
+#define RDS_TMC_L1_DIRECTION_INV 0x02
+#define RDS_TMC_L1_DURATION_INV 0x03
+#define RDS_TMC_L1_SPOKEN_INV 0x04
+#define RDS_TMC_L1_DIVERSION 0x05
+#define RDS_TMC_L1_EXTENT_ADD8 0x06
+#define RDS_TMC_L1_EXTENT_ADD16 0x07
 
 //RDS Decoder callback types
 #define RDS_CALLBACK_AF 0x00
@@ -202,6 +226,11 @@ typedef struct __attribute__ ((__packed__)) {
     uint8_t bitIndex:5;
     uint8_t sliceIndex:3;
 } TRDSTMCContainerIndex;
+
+typedef struct {
+    uint8_t type;
+    uint16_t value;
+} TRDSTMCLabel;
 
 typedef struct {
     byte carriedInGroup;
@@ -530,6 +559,30 @@ class RDSTranslator
 
         /*
         * Description:
+        *   Reads the next label from the bit container.
+        * Parameters:
+        *   slices - an array of 5 uint32_t containing the TMC message bit
+        *            container.
+        *   fp - a pointer to a TRDSTMCContainerIndex struct holding the current
+        *        read pointer for the container. On the first invocation (for a
+        *        new container), zero out the struct to signal that reading
+        *        should start from the beginning of the container; on subsequent
+        *        invocations, pass the same struct to advance from the last read
+        *        location.
+        *   label - a pointer to a TRDSTMCLabel struct that will receive the
+        *           label read.
+        * Returns:
+        *   bool, true if the read succeeded, false otherwise (most likely
+        *   reached end of container or no more labels present). Note that
+        *   according to ISO 14819-1 §5.5.1, Label 15 has an undefined size
+        *   which means that a true return with a label->type of 15 should be
+        *   interpreted as the end of the container.
+        */
+        bool readNextTMCLabel(const uint32_t slices[5],
+                              TRDSTMCContainerIndex *fp, TRDSTMCLabel *label);
+    private:
+        /*
+        * Description:
         *   Reads from a TMC multi-group message bit container.
         * Parameters:
         *   slices - an array of 5 uint32_t containing the TMC message bit
@@ -547,7 +600,7 @@ class RDSTranslator
         */
         word readFromTMCContainer(const uint32_t slices[5],
                                   TRDSTMCContainerIndex *fp, byte size);
-    private:
+
         /*
         * Description:
         *   When treating word values as two characters, RDS and AVR have a

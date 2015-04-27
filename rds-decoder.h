@@ -64,21 +64,10 @@ typedef struct __attribute__ ((__packed__)) {
 
 typedef TRDSODAGroup TRDSGroup7B;
 
-const uint8_t RDS_TMC_Label2Sizes[16] = {
-    3, 3, 5, 5, 5, 8, 8, 8, 8, 11, 16, 16, 16, 16, 0, 0};
 const uint8_t RDS_TMC_D2DynamicPersistence[8] = {
     15, 15, 30, 60, 120, 180, 240, 0xFE};
 const uint8_t RDS_TMC_D2LongerlastingPersistence[8] = {
     60, 120, 0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
-
-#define RDS_TMC_L1_URGENCY_INC 0x00
-#define RDS_TMC_L1_URGENCY_DEC 0x01
-#define RDS_TMC_L1_DIRECTION_INV 0x02
-#define RDS_TMC_L1_DURATION_INV 0x03
-#define RDS_TMC_L1_SPOKEN_INV 0x04
-#define RDS_TMC_L1_DIVERSION 0x05
-#define RDS_TMC_L1_EXTENT_ADD8 0x06
-#define RDS_TMC_L1_EXTENT_ADD16 0x07
 
 // NOTE: change to detailed format from EWS spec!
 typedef TRDSODAGroup TRDSGroup9A;
