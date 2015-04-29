@@ -522,16 +522,6 @@ class RDSTranslator
 
         /*
         * Description:
-        *   Unpacks a TMC FLT code into a TRDSTMCFLT struct.
-        * Parameters:
-        *   flt - a word containing the FTL code.
-        *   unpacked - pointer to a TRDSTMCFLT struc that will receive the
-        *              unpacked data.
-        */
-        void unpackTMCFLT(word flt, TRDSTMCFLT *unpacked);
-
-        /*
-        * Description:
         *   Unpacks a Group 8A TMC message into a TRDSTMCMessage8 struct.
         * Parameters:
         *   tmcXbits - a byte containing bits X4-X0 of the TMC message.
@@ -556,6 +546,24 @@ class RDSTranslator
         *            container will be set to zero.
         */
         void glueTMCContainerSlices(uint32_t slices[5]);
+
+        /*
+        * Description:
+        *   Adjusts a TMC multi-group bit container as needed in the presence
+        *   of a FLT in the location field, according to ISO 14819-1 §6.7.2. If
+        *   the location given is not a FLT code, exits without touching any
+        *   of the output parameters.
+        * Parameters:
+        *   slices - an array of 5 uint32_t containing the TMC message bit
+        *            container.
+        *   maybeFLT - a pointer to a word initially containing the presumed
+        *              FLT. If a FLT is indeed found there, it will be
+        *              overwritten with the actual location code.
+        *   unpacked - a pointer to a TRDSTMCFLT struct that will receive the
+        *              unpacked FLT code.
+        */
+        void adjustTMCContainerForFLT(uint32_t slices[5], word *maybeFLT,
+                                      TRDSTMCFLT *unpacked);
 
         /*
         * Description:
@@ -600,6 +608,16 @@ class RDSTranslator
         */
         word readFromTMCContainer(const uint32_t slices[5],
                                   TRDSTMCContainerIndex *fp, byte size);
+
+        /*
+        * Description:
+        *   Unpacks a TMC FLT code into a TRDSTMCFLT struct.
+        * Parameters:
+        *   flt - a word containing the FLT code.
+        *   unpacked - pointer to a TRDSTMCFLT struc that will receive the
+        *              unpacked data.
+        */
+        void unpackTMCFLT(word flt, TRDSTMCFLT *unpacked);
 
         /*
         * Description:

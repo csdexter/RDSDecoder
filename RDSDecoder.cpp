@@ -670,7 +670,7 @@ word RDSTranslator::decryptLocation(word location, byte serviceKey, byte encId,
 };
 
 void RDSTranslator::unpackTMCFLT(word flt, TRDSTMCFLT *unpacked) {
-    if((flt & RDS_TMC_MESSAGE_LOCATION_FOREIGN_MASK) !=
+    if(flt & RDS_TMC_MESSAGE_LOCATION_FOREIGN_MASK !=
        RDS_TMC_MESSAGE_LOCATION_FOREIGN_MASK)
         //Not a FLT code.
         return;
@@ -762,7 +762,8 @@ void RDSTranslator::unpackTMCMessage8(byte tmcXbits, word tmcYbits,
                     unpacked->location = tmcZbits;
                 } else {
                     //Same position as direction in single-group messages.
-                    unpacked->second = (bool)(tmcYbits & RDS_TMC_MESSAGE_DIRECTION);
+                    unpacked->second = (bool)(
+                        tmcYbits & RDS_TMC_MESSAGE_DIRECTION);
                     unpacked->sequence = (
                         tmcYbits & RDS_TMC_MESSAGE_GSI_MASK) >>
                         RDS_TMC_MESSAGE_GSI_SHR;
@@ -898,4 +899,24 @@ bool RDSTranslator::readNextTMCLabel(const uint32_t slices[5],
     };
 
     return true;
+};
+
+void RDSTranslator::adjustTMCContainerForFLT(uint32_t slices[5], word *maybeFLT,
+                                             TRDSTMCFLT *unpacked) {
+    if(!maybeFLT)
+        return;
+    if(*maybeFLT & RDS_TMC_MESSAGE_LOCATION_FOREIGN_MASK !=
+       RDS_TMC_MESSAGE_LOCATION_FOREIGN_MASK)
+        //Not a FLT code.
+        return;
+    if(!unpacked)
+        return;
+
+    unpackTMCFLT(*maybeFLT, unpacked);
+    *maybeFLT = (slices[0] & 0xFFFF0000) >> 16;
+    for(byte i = 0; i < 5; i++) {
+      slices[i] <<= 16;
+      slices[i] |= (slices[i + 1] & 0xFFFF0000) >> 16;
+    }
+    slices[5] <<= 16;
 };
