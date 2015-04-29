@@ -538,14 +538,14 @@ class RDSTranslator
         *   Glues together multiple 28 bit containers in place as used in TMC
         *   multi-group messages
         * Parameters:
-        *   slices - an array of 5 uint32_t expected to contain TMC message
+        *   slices - an array of 4 uint32_t expected to contain TMC message
         *            container slices in their lower 28 bits that are to be
-        *            glued in place (via SHL) to get an array of 5 uint32_t that
+        *            glued in place (via SHL) to get an array of 4 uint32_t that
         *            contains a contiguous TMC message container. As per
         *            ISO 14819-1 §7.6.2, the unused bits at the end of the
         *            container will be set to zero.
         */
-        void glueTMCContainerSlices(uint32_t slices[5]);
+        void glueTMCContainerSlices(uint32_t slices[4]);
 
         /*
         * Description:
@@ -554,7 +554,7 @@ class RDSTranslator
         *   the location given is not a FLT code, exits without touching any
         *   of the output parameters.
         * Parameters:
-        *   slices - an array of 5 uint32_t containing the TMC message bit
+        *   slices - an array of 4 uint32_t containing the TMC message bit
         *            container.
         *   maybeFLT - a pointer to a word initially containing the presumed
         *              FLT. If a FLT is indeed found there, it will be
@@ -562,14 +562,14 @@ class RDSTranslator
         *   unpacked - a pointer to a TRDSTMCFLT struct that will receive the
         *              unpacked FLT code.
         */
-        void adjustTMCContainerForFLT(uint32_t slices[5], word *maybeFLT,
+        void adjustTMCContainerForFLT(uint32_t slices[4], word *maybeFLT,
                                       TRDSTMCFLT *unpacked);
 
         /*
         * Description:
         *   Reads the next label from the bit container.
         * Parameters:
-        *   slices - an array of 5 uint32_t containing the TMC message bit
+        *   slices - an array of 4 uint32_t containing the TMC message bit
         *            container.
         *   fp - a pointer to a TRDSTMCContainerIndex struct holding the current
         *        read pointer for the container. On the first invocation (for a
@@ -586,14 +586,14 @@ class RDSTranslator
         *   which means that a true return with a label->type of 15 should be
         *   interpreted as the end of the container.
         */
-        bool readNextTMCLabel(const uint32_t slices[5],
+        bool readNextTMCLabel(const uint32_t slices[4],
                               TRDSTMCContainerIndex *fp, TRDSTMCLabel *label);
     private:
         /*
         * Description:
         *   Reads from a TMC multi-group message bit container.
         * Parameters:
-        *   slices - an array of 5 uint32_t containing the TMC message bit
+        *   slices - an array of 4 uint32_t containing the TMC message bit
         *            container.
         *   fp - a pointer to a TRDSTMCContainerIndex struct holding the current
         *        read pointer for the container. On the first invocation (for a
@@ -606,7 +606,7 @@ class RDSTranslator
         * Returns:
         *   The bits read from the container, LSB-aligned to a word.
         */
-        word readFromTMCContainer(const uint32_t slices[5],
+        word readFromTMCContainer(const uint32_t slices[4],
                                   TRDSTMCContainerIndex *fp, byte size);
 
         /*

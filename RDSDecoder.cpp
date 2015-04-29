@@ -792,7 +792,7 @@ void RDSTranslator::unpackTMCMessage8(byte tmcXbits, word tmcYbits,
     };
 };
 
-void RDSTranslator::glueTMCContainerSlices(uint32_t slices[5]) {
+void RDSTranslator::glueTMCContainerSlices(uint32_t slices[4]) {
     slices[0] <<= 4;
     slices[0] |= (slices[1] & 0x0F000000) >> 24;
     slices[1] <<= 8;
@@ -800,11 +800,9 @@ void RDSTranslator::glueTMCContainerSlices(uint32_t slices[5]) {
     slices[2] <<= 12;
     slices[2] |= (slices[3] & 0x0FFF0000) >> 16;
     slices[3] <<= 16;
-    slices[3] |= (slices[4] & 0x0FFFF000) >> 12;
-    slices[4] <<= 20;
 };
 
-word RDSTranslator::readFromTMCContainer(const uint32_t slices[5],
+word RDSTranslator::readFromTMCContainer(const uint32_t slices[4],
                                          TRDSTMCContainerIndex *fp, byte size) {
     if(!fp || size > 16)
         return 0x0000;
@@ -823,7 +821,7 @@ word RDSTranslator::readFromTMCContainer(const uint32_t slices[5],
         //Split fetch
         result = slices[fp->sliceIndex - 1] & (1U << fp->bitIndex) - 1;
         result <<= size - (fp->bitIndex + 1);
-        if(fp->sliceIndex < 5) {
+        if(fp->sliceIndex < 4) {
             fp->sliceIndex++;
             result |= ((1U << (size - fp->bitIndex)) - 1 <<
                       (31 - (size - fp->bitIndex) + 1)) &
@@ -837,7 +835,7 @@ word RDSTranslator::readFromTMCContainer(const uint32_t slices[5],
         result = slices[fp->sliceIndex - 1] >> (fp->bitIndex - size + 1);
         result &= (1U << size) - 1;
         if(size == fp->bitIndex + 1) {
-            if(fp->sliceIndex < 5) {
+            if(fp->sliceIndex < 4) {
                 //We read the last bit from the slice, moving on to the next.
                 fp->bitIndex = 31;
                 fp->sliceIndex++;
@@ -852,7 +850,7 @@ word RDSTranslator::readFromTMCContainer(const uint32_t slices[5],
     return result;
 };
 
-bool RDSTranslator::readNextTMCLabel(const uint32_t slices[5],
+bool RDSTranslator::readNextTMCLabel(const uint32_t slices[4],
                                      TRDSTMCContainerIndex *fp,
                                      TRDSTMCLabel *label) {
     if(!(fp || label))
@@ -867,7 +865,7 @@ bool RDSTranslator::readNextTMCLabel(const uint32_t slices[5],
       case RDS_TMC_LABEL_RESERVED2:
         //Label 15 has an undefined size so nothing can exist beyond it: fake
         //EOF status.
-        fp->sliceIndex == 6;
+        fp->sliceIndex = 6;
         break;
       case RDS_TMC_LABEL_SEPARATOR:
         //Label 14 has a size of zero.
@@ -875,6 +873,12 @@ bool RDSTranslator::readNextTMCLabel(const uint32_t slices[5],
       case RDS_TMC_LABEL_DURATION:
       case RDS_TMC_LABEL_CONTROL:
         label->value = readFromTMCContainer(slices, fp, 3);
+        if(label->type == RDS_TMC_LABEL_DURATION && !label->value)
+            //Label 0 cannot have an argument of 0, if we see that (i.e. 7
+            //consecutive zero bits), the end of the container was where the
+            //last read ended.
+            fp->sliceIndex = 6;
+            return false;
         break;
       case RDS_TMC_LABEL_LENGTH:
       case RDS_TMC_LABEL_SPEED:
@@ -901,7 +905,7 @@ bool RDSTranslator::readNextTMCLabel(const uint32_t slices[5],
     return true;
 };
 
-void RDSTranslator::adjustTMCContainerForFLT(uint32_t slices[5], word *maybeFLT,
+void RDSTranslator::adjustTMCContainerForFLT(uint32_t slices[4], word *maybeFLT,
                                              TRDSTMCFLT *unpacked) {
     if(!maybeFLT)
         return;
@@ -914,9 +918,8 @@ void RDSTranslator::adjustTMCContainerForFLT(uint32_t slices[5], word *maybeFLT,
 
     unpackTMCFLT(*maybeFLT, unpacked);
     *maybeFLT = (slices[0] & 0xFFFF0000) >> 16;
-    for(byte i = 0; i < 5; i++) {
+    for(byte i = 0; i < 4; i++) {
       slices[i] <<= 16;
       slices[i] |= (slices[i + 1] & 0xFFFF0000) >> 16;
     }
-    slices[5] <<= 16;
 };
