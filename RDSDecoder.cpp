@@ -110,7 +110,7 @@ void RDSDecoder::decodeRDSGroup(word block[]){
         case RDS_GROUP_3A:
             switch(block[3]){
                 case RDS_AID_DEFAULT:
-                    if (block[1] & RDS_ODA_GROUP_MASK == RDS_GROUP_8A) {
+                    if ((block[1] & RDS_ODA_GROUP_MASK) == RDS_GROUP_8A) {
                       //Default use of Group 8A is TMC, so act as if we saw an
                       //explicit mapping of TMC's AID to Group 8A.
                       _status.TMC.carriedInGroup = RDS_GROUP_8A;
@@ -498,10 +498,10 @@ bool RDSTranslator::decodeCallSign(word programIdentifier, char* callSign){
         (programIdentifier > 0x9EFF && programIdentifier < 0xA100) ||
         programIdentifier > 0xAFAF)
         return false;
-    else if (programIdentifier >= 0x9950 && programIdentifier <= 0x9EFF)
+    else if (programIdentifier >= 0x9950 && programIdentifier <= 0x9EFF) {
         if (programIdentifier <= 0x99B9) {
             programIdentifier -= 0x9950;
-            char exists = char(pgm_read_byte(&PI2CallSign_S[programIdentifier * 3]));
+            char exists = (char)pgm_read_byte(&PI2CallSign_S[programIdentifier * 3]);
             if (exists != '-') {
                 strncpy_P(callSign, &PI2CallSign_S[programIdentifier * 3], 3);
                 callSign[3] = '\0';
@@ -510,13 +510,14 @@ bool RDSTranslator::decodeCallSign(word programIdentifier, char* callSign){
                 return false;
         } else
             return false;
+    };
 
 
-    if (programIdentifier & 0xFFF0 == 0xAFA0)
+    if ((programIdentifier & 0xFFF0) == 0xAFA0)
         programIdentifier <<= 12;
-    else if (programIdentifier & 0xFF00 == 0xAF00)
+    else if ((programIdentifier & 0xFF00) == 0xAF00)
         programIdentifier <<= 8;
-    else if (programIdentifier & 0xF000 == 0xA000)
+    else if ((programIdentifier & 0xF000) == 0xA000)
         programIdentifier = (programIdentifier & 0x0F00 << 4) |
                             (programIdentifier & 0x00FF);
 
@@ -564,7 +565,8 @@ byte RDSTranslator::decodeTMCDistance(byte length) {
     if (length == 0) return 0xFF;
     else if (length > 0 && length <= 10) return length;
     else if (length > 10 && length <= 15) return 10 + (length - 10) * 2;
-    else if (length > 15) return 20 + (length - 15) * 5;
+    else
+    	return 20 + (length - 15) * 5;
 }
 
 void RDSTranslator::decodeTMCDuration(byte length, TRDSTime* tmctime) {
@@ -652,25 +654,21 @@ word RDSTranslator::decryptLocation(word location, byte xorValue, byte start,
 
 word RDSTranslator::decryptLocation(word location, byte encId,
                                     const word table[], bool in_flash) {
-    if(in_flash) {
+    if(in_flash)
         return decryptLocation(location, pgm_read_word(&table[encId]));
-    } else {
-        return decryptLocation(location, table[encId]);
-    };
+    return decryptLocation(location, table[encId]);
 };
 
 word RDSTranslator::decryptLocation(word location, byte serviceKey, byte encId,
                                     const word table[][32], bool in_flash) {
-    if(in_flash) {
-        return decryptLocation(location,
+    if(in_flash)
+    	return decryptLocation(location,
                                pgm_read_word(&table[serviceKey][encId]));
-    } else {
-        return decryptLocation(location, table[serviceKey][encId]);
-    };
+    return decryptLocation(location, table[serviceKey][encId]);
 };
 
 void RDSTranslator::unpackTMCFLT(word flt, TRDSTMCFLT *unpacked) {
-    if(flt & RDS_TMC_MESSAGE_LOCATION_FOREIGN_MASK !=
+    if((flt & RDS_TMC_MESSAGE_LOCATION_FOREIGN_MASK) !=
        RDS_TMC_MESSAGE_LOCATION_FOREIGN_MASK)
         //Not a FLT code.
         return;
@@ -768,8 +766,8 @@ void RDSTranslator::unpackTMCMessage8(byte tmcXbits, word tmcYbits,
                         tmcYbits & RDS_TMC_MESSAGE_GSI_MASK) >>
                         RDS_TMC_MESSAGE_GSI_SHR;
                     unpacked->data = (
-                      (tmcYbits & RDS_TMC_MESSAGE_CONTAINER_MASK) <<
-                      RDS_TMC_MESSAGE_CONTAINER_SHL) | tmcZbits;
+                      (uint32_t)(tmcYbits & RDS_TMC_MESSAGE_CONTAINER_MASK) <<
+                      RDS_TMC_MESSAGE_CONTAINER_SHL) | (uint32_t)tmcZbits;
                 };
             } else {
                 unpacked->encVariantCode = (
@@ -819,11 +817,11 @@ word RDSTranslator::readFromTMCContainer(const uint32_t slices[4],
 
     if(size > fp->bitIndex + 1) {
         //Split fetch
-        result = slices[fp->sliceIndex - 1] & (1U << fp->bitIndex) - 1;
+        result = slices[fp->sliceIndex - 1] & ((1U << fp->bitIndex) - 1);
         result <<= size - (fp->bitIndex + 1);
         if(fp->sliceIndex < 4) {
             fp->sliceIndex++;
-            result |= ((1U << (size - fp->bitIndex)) - 1 <<
+            result |= (((1U << (size - fp->bitIndex)) - 1) <<
                       (31 - (size - fp->bitIndex) + 1)) &
                       slices[fp->sliceIndex - 1];
             fp->bitIndex = 31 - (size - fp->bitIndex);
@@ -873,12 +871,13 @@ bool RDSTranslator::readNextTMCLabel(const uint32_t slices[4],
       case RDS_TMC_LABEL_DURATION:
       case RDS_TMC_LABEL_CONTROL:
         label->value = readFromTMCContainer(slices, fp, 3);
-        if(label->type == RDS_TMC_LABEL_DURATION && !label->value)
+        if(label->type == RDS_TMC_LABEL_DURATION && !label->value) {
             //Label 0 cannot have an argument of 0, if we see that (i.e. 7
             //consecutive zero bits), the end of the container was where the
             //last read ended.
             fp->sliceIndex = 6;
             return false;
+        };
         break;
       case RDS_TMC_LABEL_LENGTH:
       case RDS_TMC_LABEL_SPEED:
@@ -909,7 +908,7 @@ void RDSTranslator::adjustTMCContainerForFLT(uint32_t slices[4], word *maybeFLT,
                                              TRDSTMCFLT *unpacked) {
     if(!maybeFLT)
         return;
-    if(*maybeFLT & RDS_TMC_MESSAGE_LOCATION_FOREIGN_MASK !=
+    if((*maybeFLT & RDS_TMC_MESSAGE_LOCATION_FOREIGN_MASK) !=
        RDS_TMC_MESSAGE_LOCATION_FOREIGN_MASK)
         //Not a FLT code.
         return;
