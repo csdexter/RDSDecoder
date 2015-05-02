@@ -232,23 +232,6 @@ typedef struct {
     uint16_t value;
 } TRDSTMCLabel;
 
-typedef struct __attribute__ ((__packed__)) {
-  uint16_t code:12;
-  uint8_t quantifier:4;
-  uint8_t nature:2;
-  uint8_t urgency:2;
-  uint8_t longerLasting:1;
-  uint8_t silentDuration:1;
-  uint8_t bidirectional:1;
-  uint8_t updateClass;
-  char *description;
-} TRDSTMCEventListEntry;
-
-typedef struct {
-  uint8_t code;
-  char *description;
-} TRDSTMCSupplementaryInformation;
-
 typedef struct {
     byte carriedInGroup;
     word message;

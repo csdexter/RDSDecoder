@@ -12,6 +12,7 @@
 
 #include "RDSDecoder.h"
 #include "RDSDecoder-private.h"
+#include "iso14819-2.h"
 
 #include <string.h>
 
