@@ -378,7 +378,7 @@ const char PTY2Text_S_College[] PROGMEM = "College";
 const char PTY2Text_S_Spanish[] PROGMEM = "Espanol";
 const char PTY2Text_S_HipHop[] PROGMEM = "Hip hop";
 
-const char * const PTY2Text_EU[32] PROGMEM = {
+PGM_P const PTY2Text_EU[32] PROGMEM = {
     PTY2Text_S_None,
     PTY2Text_S_News,
     PTY2Text_S_Current,
@@ -412,7 +412,7 @@ const char * const PTY2Text_EU[32] PROGMEM = {
     PTY2Text_S_EmergencyTest,
     PTY2Text_S_Emergency};
 
-const char * const PTY2Text_US[32] PROGMEM = {
+PGM_P const PTY2Text_US[32] PROGMEM = {
     PTY2Text_S_None,
     PTY2Text_S_News,
     PTY2Text_S_Information,

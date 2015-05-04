@@ -1,0 +1,22 @@
+About generated files
+=====================
+
+1) Headers:
+The files so14819-2-events.h and iso14819-2-supplementary.h are generated from
+iso-14819_2-event_code_list.csv and
+iso-14819_2-supplementary_information_list.csv, respectively, by gentables.py.
+
+2) External EEPROM binary image files:
+The files iso14819-2-events.eeprom and iso14819-2-supplementary.eeprom are
+generated from iso-14819_2-event_code_list.csv and 
+iso-14819_2-supplementary_information_list.csv, respectively, by gentables.py.
+
+3) External EEPROM Intel HEX image files:
+The files iso14819-2-events.hex and iso14819-2-supplementary.hex are generated
+from iso14819-2-events.eeprom and iso14819-2-supplementary.eeprom,
+respectively, by srecord (from http://srecord.sourceforge.net/).
+
+
+All generated files have been included here for convenience but should normally
+be regarded as depending on their sources and rebuilt whenever their
+dependencies change.

@@ -29,8 +29,10 @@ OUTPUT_STRINGS = {'firstline': {
                   'varname': {
                       'events': 'TRDSTMCEventListEntry ISO14819_2_Events',
                       'supplementary': 'TRDSTMCSupplementaryEntry '
-                                       'ISO14819_2_Supplementary'}}
-FIELD_COUNT = {'events': 9, 'supplementary': 2}
+                                       'ISO14819_2_Supplementary'},
+                  'storage': {
+                      'events': 'WITH_RDS_TMC_EVENT_STRINGS_',
+                      'supplementary': 'WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_'}}
 QUANTIFIER_PREFIX = 'RDS_TMC_QUANTIFIER_'
 NATURE_PREFIX = 'RDS_TMC_NATURE_'
 URGENCY_PREFIX = 'RDS_TMC_URGENCY_'
@@ -42,6 +44,21 @@ URGENCIES = {'': 'NORMAL', 'U': 'URGENT', 'X': 'XURGENT'}
 FIND_Q = re.compile(r'([(][^(]*)(Q)([^)]*[)])')
 REPLACE_Q = r'\1%s\3'
 FIND_BRACE = re.compile(r'[{][^}]*[}]')
+
+def PostProcessString(s):
+  return re.sub(FIND_BRACE, '', re.sub(FIND_Q, REPLACE_Q, s)).strip()
+
+def OutputStringPointer(fout, index, offset, worktype):
+  fout.write(
+    '#if defined(%sFLASH)\n, %s_S_%04X\n'
+    '#elif defined(%sEEPROM)\n, (const char * const) 0x%04X\n'
+    '#endif\n' % (
+        OUTPUT_STRINGS['storage'][worktype],
+        'Event' if worktype == 'events' else 'Supplementary',
+        index,
+        OUTPUT_STRINGS['storage'][worktype],
+        offset))
+
 
 def main(argv):
   if len(argv) != 3:
@@ -55,10 +72,14 @@ def main(argv):
 
   if argv[1] == 'events':
     fname_out = 'iso14819-2-events.h'
+    fname_eeprom = 'iso14819-2-events.eeprom'
   else:
     fname_out = 'iso14819-2-supplementary.h'
+    fname_eeprom = 'iso14819-2-supplementary.eeprom'
+  eeprom_offset = 0
 
-  with open(argv[2], 'rb') as fin, open(fname_out, 'w') as fout:
+  with open(argv[2], 'rb') as fin, open(fname_out, 'w') as fout,\
+      open(fname_eeprom, 'wb') as feeprom:
     table = list(csv.reader(fin))
     fout.write(
         '/*\n * ISO 14819-2 header file: %(firstline)s entries\n'
@@ -68,11 +89,14 @@ def main(argv):
             'firstline': OUTPUT_STRINGS['firstline'][argv[1]],
             'fname': fname_out.upper().replace('-','_').replace('.','_')})
 
+    fout.write('#if defined(%sFLASH)\n' % OUTPUT_STRINGS['storage'][argv[1]])
     for row in table:
       fout.write('const char %s_S_%s[] PROGMEM = "%s";\n' % (
           'Event' if argv[1] == 'events' else 'Supplementary',
           '%04X' % int(row[0]) if argv[1] == 'events' else '%02X' % int(row[0]),
-          re.sub(FIND_BRACE, '', re.sub(FIND_Q, REPLACE_Q, row[1])).strip()))
+          PostProcessString(row[1])))
+      feeprom.write('%s\x00' % PostProcessString(row[1]))
+    fout.write('#endif\n')
 
     fout.write('\nconst %(varname)s[%(count)d] PROGMEM = {\n' % {
             'varname': OUTPUT_STRINGS['varname'][argv[1]],
@@ -80,7 +104,7 @@ def main(argv):
 
     if argv[1] == 'events':
       for row in table:
-        fout.write('\t{0x%04X, %s, %s, %s, %s, %s, %s, %s, Event_S_%04X},\n' % (
+        fout.write('\t{0x%04X, %s, %s, %s, %s, %s, %s, %s\n' % (
             int(row[0]),
             '%s%s' % (QUANTIFIER_PREFIX, QUANTIFIERS[int(row[3])]),
             '%s%s' % (NATURE_PREFIX, NATURES[row[2]]),
@@ -88,12 +112,16 @@ def main(argv):
             'true' if 'L' in row[4] else 'false',
             'true' if '(' in row[4] or row[3] == '7' else 'false',
             'true' if row[5] == '2' else 'false',
-            row[7],
-            int(row[0])))
+            row[7]))
+        OutputStringPointer(fout, int(row[0]), eeprom_offset, argv[1])
+        eeprom_offset += len(PostProcessString(row[1])) + 1;
+        fout.write('},\n')
     else:
       for row in table:
-        fout.write('\t{0x%02X, Supplementary_S_%02X},\n' % (
-          int(row[0]), int(row[0])))
+        fout.write('\t{0x%02X\n' % int(row[0]))
+        OutputStringPointer(fout, int(row[0]), eeprom_offset, argv[1])
+        eeprom_offset += len(PostProcessString(row[1])) + 1;
+        fout.write('},\n')
 
     fout.write('};\n\n#endif')
 
