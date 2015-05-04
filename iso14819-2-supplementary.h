@@ -5,6 +5,7 @@
 
 #ifndef _ISO14819_2_SUPPLEMENTARY_H_INCLUDED
 #define _ISO14819_2_SUPPLEMENTARY_H_INCLUDED
+#ifdef WITH_RDS_TMC_SUPPLEMENTARY
 
 #if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
 const char Supplementary_S_01[] PROGMEM = "heavy lorries are recommended to avoid the area";
@@ -243,1404 +244,1638 @@ const char Supplementary_S_FF[] PROGMEM = "Traffic queue length decreasing";
 #endif
 
 const TRDSTMCSupplementaryEntry ISO14819_2_Supplementary[233] PROGMEM = {
-	{0x01#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0001
+	{0x01
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_01
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0000
 #endif
 },
-	{0x02#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0002
+	{0x02
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_02
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0030
 #endif
 },
-	{0x03#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0003
+	{0x03
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_03
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x003D
 #endif
 },
-	{0x04#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0004
+	{0x04
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_04
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0054
 #endif
 },
-	{0x05#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0005
+	{0x05
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_05
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x006B
 #endif
 },
-	{0x06#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0006
+	{0x06
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_06
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x008B
 #endif
 },
-	{0x07#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0007
+	{0x07
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_07
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x00AE
 #endif
 },
-	{0x08#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0008
+	{0x08
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_08
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x00C9
 #endif
 },
-	{0x09#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0009
+	{0x09
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_09
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x00E1
 #endif
 },
-	{0x0A#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_000A
+	{0x0A
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_0A
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0102
 #endif
 },
-	{0x0B#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_000B
+	{0x0B
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_0B
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0115
 #endif
 },
-	{0x0C#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_000C
+	{0x0C
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_0C
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x012E
 #endif
 },
-	{0x0D#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_000D
+	{0x0D
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_0D
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x013E
 #endif
 },
-	{0x0E#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_000E
+	{0x0E
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_0E
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0151
 #endif
 },
-	{0x0F#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_000F
+	{0x0F
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_0F
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0161
 #endif
 },
-	{0x10#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0010
+	{0x10
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_10
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0174
 #endif
 },
-	{0x11#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0011
+	{0x11
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_11
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x018D
 #endif
 },
-	{0x12#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0012
+	{0x12
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_12
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x019B
 #endif
 },
-	{0x13#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0013
+	{0x13
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_13
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x01AA
 #endif
 },
-	{0x14#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0014
+	{0x14
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_14
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x01B9
 #endif
 },
-	{0x15#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0015
+	{0x15
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_15
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x01D3
 #endif
 },
-	{0x16#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0016
+	{0x16
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_16
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x01E5
 #endif
 },
-	{0x17#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0017
+	{0x17
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_17
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0212
 #endif
 },
-	{0x18#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0018
+	{0x18
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_18
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0223
 #endif
 },
-	{0x19#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0019
+	{0x19
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_19
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0240
 #endif
 },
-	{0x1A#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_001A
+	{0x1A
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_1A
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0258
 #endif
 },
-	{0x1B#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_001B
+	{0x1B
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_1B
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x026E
 #endif
 },
-	{0x1C#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_001C
+	{0x1C
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_1C
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x027F
 #endif
 },
-	{0x1D#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_001D
+	{0x1D
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_1D
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0291
 #endif
 },
-	{0x1E#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_001E
+	{0x1E
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_1E
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x02AB
 #endif
 },
-	{0x1F#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_001F
+	{0x1F
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_1F
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x02CD
 #endif
 },
-	{0x20#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0020
+	{0x20
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_20
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x02E7
 #endif
 },
-	{0x21#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0021
+	{0x21
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_21
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x02FD
 #endif
 },
-	{0x22#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0022
+	{0x22
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_22
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0314
 #endif
 },
-	{0x23#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0023
+	{0x23
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_23
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0328
 #endif
 },
-	{0x24#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0024
+	{0x24
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_24
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x033A
 #endif
 },
-	{0x25#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0025
+	{0x25
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_25
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x034D
 #endif
 },
-	{0x26#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0026
+	{0x26
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_26
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x035E
 #endif
 },
-	{0x27#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0027
+	{0x27
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_27
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x036D
 #endif
 },
-	{0x28#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0028
+	{0x28
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_28
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0386
 #endif
 },
-	{0x29#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0029
+	{0x29
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_29
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x039B
 #endif
 },
-	{0x2A#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_002A
+	{0x2A
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_2A
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x03BD
 #endif
 },
-	{0x2B#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_002B
+	{0x2B
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_2B
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x03E2
 #endif
 },
-	{0x2C#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_002C
+	{0x2C
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_2C
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x03F7
 #endif
 },
-	{0x2D#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_002D
+	{0x2D
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_2D
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x040E
 #endif
 },
-	{0x2E#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_002E
+	{0x2E
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_2E
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x042C
 #endif
 },
-	{0x2F#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_002F
+	{0x2F
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_2F
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0450
 #endif
 },
-	{0x30#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0030
+	{0x30
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_30
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x046B
 #endif
 },
-	{0x31#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0031
+	{0x31
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_31
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0476
 #endif
 },
-	{0x32#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0032
+	{0x32
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_32
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0486
 #endif
 },
-	{0x33#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0033
+	{0x33
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_33
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x04A2
 #endif
 },
-	{0x34#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0034
+	{0x34
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_34
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x04B1
 #endif
 },
-	{0x35#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0035
+	{0x35
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_35
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x04CB
 #endif
 },
-	{0x36#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0036
+	{0x36
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_36
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x04D5
 #endif
 },
-	{0x37#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0037
+	{0x37
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_37
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x04E4
 #endif
 },
-	{0x38#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0038
+	{0x38
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_38
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x04ED
 #endif
 },
-	{0x39#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0039
+	{0x39
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_39
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x04FC
 #endif
 },
-	{0x3A#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_003A
+	{0x3A
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_3A
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0506
 #endif
 },
-	{0x3B#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_003B
+	{0x3B
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_3B
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0515
 #endif
 },
-	{0x3C#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_003C
+	{0x3C
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_3C
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x051E
 #endif
 },
-	{0x3D#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_003D
+	{0x3D
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_3D
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x052D
 #endif
 },
-	{0x3E#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_003E
+	{0x3E
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_3E
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x054E
 #endif
 },
-	{0x3F#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_003F
+	{0x3F
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_3F
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x056C
 #endif
 },
-	{0x40#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0040
+	{0x40
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_40
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0583
 #endif
 },
-	{0x41#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0041
+	{0x41
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_41
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x05A5
 #endif
 },
-	{0x42#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0042
+	{0x42
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_42
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x05C6
 #endif
 },
-	{0x43#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0043
+	{0x43
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_43
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x05E7
 #endif
 },
-	{0x44#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0044
+	{0x44
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_44
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x05FD
 #endif
 },
-	{0x45#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0045
+	{0x45
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_45
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x062D
 #endif
 },
-	{0x46#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0046
+	{0x46
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_46
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x065E
 #endif
 },
-	{0x47#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0047
+	{0x47
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_47
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x066C
 #endif
 },
-	{0x48#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0048
+	{0x48
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_48
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x067A
 #endif
 },
-	{0x49#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0049
+	{0x49
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_49
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0692
 #endif
 },
-	{0x4A#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_004A
+	{0x4A
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_4A
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x06B9
 #endif
 },
-	{0x4B#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_004B
+	{0x4B
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_4B
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x06E3
 #endif
 },
-	{0x4C#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_004C
+	{0x4C
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_4C
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x06FF
 #endif
 },
-	{0x4D#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_004D
+	{0x4D
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_4D
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x071B
 #endif
 },
-	{0x4E#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_004E
+	{0x4E
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_4E
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x073B
 #endif
 },
-	{0x4F#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_004F
+	{0x4F
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_4F
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0752
 #endif
 },
-	{0x50#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0050
+	{0x50
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_50
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0761
 #endif
 },
-	{0x51#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0051
+	{0x51
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_51
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x077F
 #endif
 },
-	{0x52#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0052
+	{0x52
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_52
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x079C
 #endif
 },
-	{0x53#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0053
+	{0x53
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_53
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x07B5
 #endif
 },
-	{0x54#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0054
+	{0x54
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_54
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x07CD
 #endif
 },
-	{0x55#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0055
+	{0x55
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_55
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x07F4
 #endif
 },
-	{0x56#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0056
+	{0x56
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_56
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x081A
 #endif
 },
-	{0x58#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0058
+	{0x58
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_58
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x082B
 #endif
 },
-	{0x59#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0059
+	{0x59
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_59
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x083F
 #endif
 },
-	{0x5A#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_005A
+	{0x5A
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_5A
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0851
 #endif
 },
-	{0x5B#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_005B
+	{0x5B
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_5B
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0864
 #endif
 },
-	{0x5C#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_005C
+	{0x5C
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_5C
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x086B
 #endif
 },
-	{0x5D#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_005D
+	{0x5D
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_5D
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x087F
 #endif
 },
-	{0x5E#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_005E
+	{0x5E
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_5E
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0896
 #endif
 },
-	{0x5F#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_005F
+	{0x5F
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_5F
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x08B2
 #endif
 },
-	{0x60#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0060
+	{0x60
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_60
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x08DE
 #endif
 },
-	{0x61#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0061
+	{0x61
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_61
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x08F2
 #endif
 },
-	{0x62#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0062
+	{0x62
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_62
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0901
 #endif
 },
-	{0x63#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0063
+	{0x63
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_63
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0912
 #endif
 },
-	{0x64#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0064
+	{0x64
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_64
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x091D
 #endif
 },
-	{0x65#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0065
+	{0x65
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_65
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0937
 #endif
 },
-	{0x66#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0066
+	{0x66
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_66
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0958
 #endif
 },
-	{0x67#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0067
+	{0x67
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_67
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0977
 #endif
 },
-	{0x68#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0068
+	{0x68
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_68
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x099F
 #endif
 },
-	{0x69#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0069
+	{0x69
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_69
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x09B1
 #endif
 },
-	{0x6A#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_006A
+	{0x6A
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_6A
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x09C6
 #endif
 },
-	{0x6B#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_006B
+	{0x6B
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_6B
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x09E0
 #endif
 },
-	{0x6C#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_006C
+	{0x6C
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_6C
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x09F5
 #endif
 },
-	{0x6D#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_006D
+	{0x6D
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_6D
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0A12
 #endif
 },
-	{0x6E#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_006E
+	{0x6E
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_6E
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0A30
 #endif
 },
-	{0x6F#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_006F
+	{0x6F
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_6F
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0A53
 #endif
 },
-	{0x70#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0070
+	{0x70
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_70
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0A6E
 #endif
 },
-	{0x71#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0071
+	{0x71
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_71
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0A81
 #endif
 },
-	{0x72#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0072
+	{0x72
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_72
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0AA4
 #endif
 },
-	{0x73#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0073
+	{0x73
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_73
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0AC2
 #endif
 },
-	{0x74#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0074
+	{0x74
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_74
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0AE8
 #endif
 },
-	{0x75#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0075
+	{0x75
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_75
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0B08
 #endif
 },
-	{0x76#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0076
+	{0x76
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_76
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0B16
 #endif
 },
-	{0x77#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0077
+	{0x77
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_77
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0B30
 #endif
 },
-	{0x78#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0078
+	{0x78
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_78
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0B3B
 #endif
 },
-	{0x79#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0079
+	{0x79
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_79
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0B4B
 #endif
 },
-	{0x7A#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_007A
+	{0x7A
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_7A
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0B77
 #endif
 },
-	{0x7B#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_007B
+	{0x7B
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_7B
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0B98
 #endif
 },
-	{0x7C#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_007C
+	{0x7C
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_7C
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0BBC
 #endif
 },
-	{0x7D#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_007D
+	{0x7D
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_7D
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0BE1
 #endif
 },
-	{0x7E#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_007E
+	{0x7E
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_7E
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0BF9
 #endif
 },
-	{0x80#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0080
+	{0x80
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_80
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0C1E
 #endif
 },
-	{0x81#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0081
+	{0x81
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_81
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0C36
 #endif
 },
-	{0x83#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0083
+	{0x83
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_83
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0C69
 #endif
 },
-	{0x84#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0084
+	{0x84
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_84
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0C78
 #endif
 },
-	{0x85#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0085
+	{0x85
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_85
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0C86
 #endif
 },
-	{0x86#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0086
+	{0x86
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_86
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0CA4
 #endif
 },
-	{0x88#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0088
+	{0x88
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_88
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0CC1
 #endif
 },
-	{0x8D#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_008D
+	{0x8D
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_8D
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0CDB
 #endif
 },
-	{0x8E#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_008E
+	{0x8E
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_8E
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0CE8
 #endif
 },
-	{0x8F#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_008F
+	{0x8F
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_8F
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0CF6
 #endif
 },
-	{0x90#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0090
+	{0x90
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_90
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0D02
 #endif
 },
-	{0x91#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0091
+	{0x91
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_91
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0D12
 #endif
 },
-	{0x92#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0092
+	{0x92
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_92
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0D26
 #endif
 },
-	{0x93#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0093
+	{0x93
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_93
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0D3B
 #endif
 },
-	{0x94#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0094
+	{0x94
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_94
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0D51
 #endif
 },
-	{0x95#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0095
+	{0x95
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_95
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0D6D
 #endif
 },
-	{0x96#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0096
+	{0x96
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_96
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0D87
 #endif
 },
-	{0x97#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0097
+	{0x97
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_97
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0D99
 #endif
 },
-	{0x98#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0098
+	{0x98
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_98
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0DA5
 #endif
 },
-	{0x99#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_0099
+	{0x99
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_99
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0DB2
 #endif
 },
-	{0x9A#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_009A
+	{0x9A
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_9A
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0DC4
 #endif
 },
-	{0x9B#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_009B
+	{0x9B
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_9B
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0DD1
 #endif
 },
-	{0x9C#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_009C
+	{0x9C
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_9C
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0DED
 #endif
 },
-	{0x9D#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_009D
+	{0x9D
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_9D
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0E01
 #endif
 },
-	{0x9E#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_009E
+	{0x9E
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_9E
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0E1F
 #endif
 },
-	{0x9F#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_009F
+	{0x9F
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_9F
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0E3B
 #endif
 },
-	{0xA0#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00A0
+	{0xA0
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_A0
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0E62
 #endif
 },
-	{0xA1#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00A1
+	{0xA1
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_A1
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0E88
 #endif
 },
-	{0xA2#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00A2
+	{0xA2
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_A2
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0E93
 #endif
 },
-	{0xA3#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00A3
+	{0xA3
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_A3
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0EA1
 #endif
 },
-	{0xA4#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00A4
+	{0xA4
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_A4
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0EB3
 #endif
 },
-	{0xA5#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00A5
+	{0xA5
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_A5
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0EC6
 #endif
 },
-	{0xA6#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00A6
+	{0xA6
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_A6
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0EE0
 #endif
 },
-	{0xA7#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00A7
+	{0xA7
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_A7
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0EF9
 #endif
 },
-	{0xA8#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00A8
+	{0xA8
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_A8
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0F0C
 #endif
 },
-	{0xA9#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00A9
+	{0xA9
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_A9
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0F23
 #endif
 },
-	{0xAA#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00AA
+	{0xAA
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_AA
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0F3C
 #endif
 },
-	{0xAB#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00AB
+	{0xAB
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_AB
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0F50
 #endif
 },
-	{0xAC#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00AC
+	{0xAC
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_AC
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0F6B
 #endif
 },
-	{0xAD#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00AD
+	{0xAD
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_AD
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0F8A
 #endif
 },
-	{0xAE#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00AE
+	{0xAE
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_AE
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0FAB
 #endif
 },
-	{0xAF#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00AF
+	{0xAF
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_AF
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0FC2
 #endif
 },
-	{0xB0#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00B0
+	{0xB0
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_B0
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0FDC
 #endif
 },
-	{0xB1#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00B1
+	{0xB1
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_B1
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0FE9
 #endif
 },
-	{0xB2#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00B2
+	{0xB2
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_B2
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x0FF3
 #endif
 },
-	{0xB3#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00B3
+	{0xB3
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_B3
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x100D
 #endif
 },
-	{0xB4#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00B4
+	{0xB4
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_B4
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1024
 #endif
 },
-	{0xB5#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00B5
+	{0xB5
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_B5
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1049
 #endif
 },
-	{0xB9#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00B9
+	{0xB9
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_B9
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x106B
 #endif
 },
-	{0xBF#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00BF
+	{0xBF
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_BF
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x107E
 #endif
 },
-	{0xC0#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00C0
+	{0xC0
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_C0
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1095
 #endif
 },
-	{0xC3#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00C3
+	{0xC3
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_C3
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x10AA
 #endif
 },
-	{0xC4#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00C4
+	{0xC4
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_C4
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x10C4
 #endif
 },
-	{0xC5#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00C5
+	{0xC5
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_C5
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x10DC
 #endif
 },
-	{0xC6#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00C6
+	{0xC6
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_C6
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x10FF
 #endif
 },
-	{0xC7#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00C7
+	{0xC7
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_C7
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1123
 #endif
 },
-	{0xC8#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00C8
+	{0xC8
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_C8
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x113A
 #endif
 },
-	{0xC9#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00C9
+	{0xC9
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_C9
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1155
 #endif
 },
-	{0xCA#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00CA
+	{0xCA
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_CA
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1169
 #endif
 },
-	{0xCB#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00CB
+	{0xCB
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_CB
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1183
 #endif
 },
-	{0xCC#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00CC
+	{0xCC
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_CC
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x119B
 #endif
 },
-	{0xCD#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00CD
+	{0xCD
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_CD
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x11B3
 #endif
 },
-	{0xCE#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00CE
+	{0xCE
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_CE
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x11D2
 #endif
 },
-	{0xCF#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00CF
+	{0xCF
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_CF
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x11EA
 #endif
 },
-	{0xD0#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00D0
+	{0xD0
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_D0
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1201
 #endif
 },
-	{0xD1#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00D1
+	{0xD1
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_D1
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1214
 #endif
 },
-	{0xD2#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00D2
+	{0xD2
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_D2
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x123F
 #endif
 },
-	{0xD3#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00D3
+	{0xD3
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_D3
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1253
 #endif
 },
-	{0xD4#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00D4
+	{0xD4
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_D4
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1267
 #endif
 },
-	{0xD5#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00D5
+	{0xD5
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_D5
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1275
 #endif
 },
-	{0xD6#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00D6
+	{0xD6
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_D6
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1283
 #endif
 },
-	{0xD7#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00D7
+	{0xD7
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_D7
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1297
 #endif
 },
-	{0xD8#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00D8
+	{0xD8
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_D8
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x12AF
 #endif
 },
-	{0xD9#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00D9
+	{0xD9
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_D9
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x12C0
 #endif
 },
-	{0xDA#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00DA
+	{0xDA
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_DA
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x12D5
 #endif
 },
-	{0xDB#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00DB
+	{0xDB
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_DB
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x12E2
 #endif
 },
-	{0xDC#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00DC
+	{0xDC
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_DC
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x12F1
 #endif
 },
-	{0xDD#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00DD
+	{0xDD
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_DD
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x12FD
 #endif
 },
-	{0xDE#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00DE
+	{0xDE
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_DE
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1302
 #endif
 },
-	{0xDF#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00DF
+	{0xDF
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_DF
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1309
 #endif
 },
-	{0xE0#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00E0
+	{0xE0
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_E0
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1323
 #endif
 },
-	{0xE1#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00E1
+	{0xE1
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_E1
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1335
 #endif
 },
-	{0xE2#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00E2
+	{0xE2
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_E2
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x134A
 #endif
 },
-	{0xE3#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00E3
+	{0xE3
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_E3
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x135D
 #endif
 },
-	{0xE7#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00E7
+	{0xE7
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_E7
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1375
 #endif
 },
-	{0xE8#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00E8
+	{0xE8
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_E8
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1389
 #endif
 },
-	{0xE9#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00E9
+	{0xE9
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_E9
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x13A3
 #endif
 },
-	{0xEA#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00EA
+	{0xEA
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_EA
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x13B2
 #endif
 },
-	{0xEB#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00EB
+	{0xEB
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_EB
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x13D7
 #endif
 },
-	{0xEC#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00EC
+	{0xEC
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_EC
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1416
 #endif
 },
-	{0xED#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00ED
+	{0xED
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_ED
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1455
 #endif
 },
-	{0xEE#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00EE
+	{0xEE
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_EE
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1494
 #endif
 },
-	{0xEF#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00EF
+	{0xEF
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_EF
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x14D3
 #endif
 },
-	{0xF0#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00F0
+	{0xF0
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_F0
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1502
 #endif
 },
-	{0xF1#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00F1
+	{0xF1
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_F1
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x150F
 #endif
 },
-	{0xF2#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00F2
+	{0xF2
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_F2
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1525
 #endif
 },
-	{0xF3#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00F3
+	{0xF3
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_F3
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x152A
 #endif
 },
-	{0xF4#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00F4
+	{0xF4
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_F4
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x152D
 #endif
 },
-	{0xF5#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00F5
+	{0xF5
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_F5
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1530
 #endif
 },
-	{0xF6#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00F6
+	{0xF6
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_F6
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1550
 #endif
 },
-	{0xF7#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00F7
+	{0xF7
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_F7
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x158F
 #endif
 },
-	{0xF8#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00F8
+	{0xF8
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_F8
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x15CE
 #endif
 },
-	{0xF9#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00F9
+	{0xF9
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_F9
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x160D
 #endif
 },
-	{0xFA#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00FA
+	{0xFA
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_FA
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x164C
 #endif
 },
-	{0xFB#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00FB
+	{0xFB
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_FB
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1662
 #endif
 },
-	{0xFC#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00FC
+	{0xFC
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_FC
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x1673
 #endif
 },
-	{0xFD#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00FD
+	{0xFD
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_FD
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x168B
 #endif
 },
-	{0xFF#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
-, Supplementary_S_00FF
+	{0xFF
+#if defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_FLASH)
+, Supplementary_S_FF
 #elif defined(WITH_RDS_TMC_SUPPLEMENTARY_STRINGS_EEPROM)
 , (const char * const) 0x169B
 #endif
 },
 };
 
+#endif
 #endif

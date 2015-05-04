@@ -370,9 +370,12 @@ class RDSDecoder
 
         /*
         * Description:
-        *   Filters the string str in place to only contain printable
-        *   characters and also replaces 0x0D (CR) with 0x00 effectively
-        *   ending the string at that point as per RDS §3.1.5.3.
+        *   Filters str in place to only contain printable characters and also
+        *   replaces 0x0D (CR) with 0x00 effectively ending the string at that
+        *   point as per RDS §6.1.5.3.
+        *   Makes a good-will effort to map the RDS character set to the one on
+        *   a European CGROM Hitachi HD44780 as most users will want to display
+        *   RDS information on such a display.
         *   Any unprintable character is converted to a question mark ("?"),
         *   as is customary. This helps with filtering out noisy strings.
         */

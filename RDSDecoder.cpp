@@ -19,7 +19,7 @@
 #if defined(__GNUC__)
 # if defined(__i386__) || defined(__x86_64__)
 #  define PROGMEM
-#  define PGM_P char *
+#  define PGM_P const char *
 #  define strncpy_P strncpy
 #  define lowByte(x) (uint8_t)((x) & 0xFF)
 #  define highByte(x) (uint8_t)(((x) >> 8) & 0xFF)
@@ -299,17 +299,24 @@ void RDSDecoder::resetRDS(void){
     _havect = false;
 }
 
+const char PROGMEM RDS2LCD_S[] = "\xE1\xE0\xE9\xE8\xED\xEE\xF3\xF2\xFA\xF9\xD1"
+                                 "\xC7S\xDF\xA1J\xE2\xE4\xEA\xEB\xEE\xEF\xF4"
+                                 "\xF6\xFB\xFC\xF1\xE7sgij\xAA\x90\xA9%Gen\xF6"
+                                 "\x93""E\xA3$\x1B\x18\x1A\x19\xBA\xB9\xB2\xB3"
+                                 "\xB1In\xFC\xB5\xBF\xF7\xB0\xBC\xBD\xBE\xA7";
+
 void RDSDecoder::makePrintable(char* str){
     for(byte i = 0; i < strlen(str); i++) {
         if(str[i] == 0x0D) {
+            //CR ends the string, according to RDS §6.1.5.3
             str[i] = '\0';
             break;
         }
         //TODO: implement codepages from standard and do full decoding.
-        // <32 == not in table, kill
         // 0x24 is generic currency symbol, not dollar sign
         // 0x5E is long dash, not caret
-        // 0x60 is double vertical line (box drawing char), not backtick
+        // 0x60 is double vertical line (box drawing char or pause symbol), not
+        //      backtick
         // 0x7E is overbar, not tilde
         // 0x80: a-acute, a-grave, e-acute, e-grave, i-acute, i-grave, o-acute,
         //       o-grave, u-acute, u-grave, N-tilde, C-cedilla, S-cedilla,
@@ -318,7 +325,7 @@ void RDSDecoder::makePrintable(char* str){
         //       u-umlaut, n-tilde, c-cedilla, s-cedilla, g-breve,
         //       turkish-i-nodot, dutch-ij, a-superscript, alpha, (c), permille,
         //       G-breve, e-caron, n-caron, o-dprime, pi, EUR, GBP, USD, 
-        //       arrow-left, arrow-up, arrow-right, arrow-left, o-superscript,
+        //       arrow-left, arrow-up, arrow-right, arrow-down, o-superscript,
         //       1-superscript, 2-superscript, 3-superscript, +/-,
         //       turkish-I-dot, n-acute, u-dprime, miu, spanish-question,
         //       division, degree, 1/4, 1/2, 3/4, paragraph,
@@ -327,12 +334,21 @@ void RDSDecoder::makePrintable(char* str){
         //       A-tilde, A-circle, AE, OE, y-circ, Y-acute, O-tilde, O-slash,
         //       Thorn, NG, R,C,S,Z{acute}, T-bar, th, a-tilde, a-circle, ae,
         //       oe, w-circ, o-tilde, o-slash, thorn, ng, r,c,s,z{acute}, t-bar
+        if(str[i] == 0x0A || str[i] == 0x0B || str[i] == 0x1F)
+            //LF, VT and US are allowed as a control characters. The first with
+            //the same meaning as on UNIX, second as end-of-headline indicator
+            //and third as soft-hyphen, according to RDS §6.1.5.3
+            continue;
+        //Any other control character is an undetected error on the receiving
+        //side (because the manufacturers of the RDS decoder chip were too cheap
+        //to properly implement the ECC in the standard.
         if(str[i] < 32) str[i] = '?';
-        /*else if(str[i] == 0x24) str[i] = '¤';
-        else if(str[i] == 0x5E) str[i] = '―';
-        else if(str[i] == 0x60) str[i] = '║';
-        else if(str[i] == 0x7E) str[i] = ' ̄';*/
-        // add table 0x80 -> 0xFF here.
+        else if(str[i] == 0x24) str[i] = '\xA4';
+        else if(str[i] == 0x5E) str[i] = '-';
+        else if(str[i] == 0x60) str[i] = '\xA0';
+        else if(str[i] == 0x7E) str[i] = '_';
+        else if(str[i] >= 0x80)
+            str[i] = (char)pgm_read_byte(&RDS2LCD_S[str[i] - 0x80]);
     }
 }
 

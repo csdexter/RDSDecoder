@@ -5,6 +5,7 @@
 
 #ifndef _ISO14819_2_EVENTS_H_INCLUDED
 #define _ISO14819_2_EVENTS_H_INCLUDED
+#ifdef WITH_RDS_TMC_EVENTS
 
 #if defined(WITH_RDS_TMC_EVENT_STRINGS_FLASH)
 const char Event_S_0001[] PROGMEM = "traffic problem";
@@ -12428,4 +12429,5 @@ const TRDSTMCEventListEntry ISO14819_2_Events[1552] PROGMEM = {
 },
 };
 
+#endif
 #endif
