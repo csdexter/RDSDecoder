@@ -303,7 +303,11 @@ const char PROGMEM RDS2LCD_S[] = "\xE1\xE0\xE9\xE8\xED\xEE\xF3\xF2\xFA\xF9\xD1"
                                  "\xC7S\xDF\xA1J\xE2\xE4\xEA\xEB\xEE\xEF\xF4"
                                  "\xF6\xFB\xFC\xF1\xE7sgij\xAA\x90\xA9%Gen\xF6"
                                  "\x93""E\xA3$\x1B\x18\x1A\x19\xBA\xB9\xB2\xB3"
-                                 "\xB1In\xFC\xB5\xBF\xF7\xB0\xBC\xBD\xBE\xA7";
+                                 "\xB1In\xFC\xB5\xBF\xF7\xB0\xBC\xBD\xBE\xA7"
+                                 "\xC1\xC0\xC9\xC8\xCD\xCE\xD3\xD2\xDA\xD9RCSZ"
+                                 "\xD0L\xC2\xC4\xCA\xCB\xCE\xCF\xD4\xD6\xDB\xDC"
+                                 "rcsz\xF0l\xC3\xC5\xC6Oy\xDD\xD5""0\xDEGRCSZT"
+                                 "\xF0\xE3\xE5\xE6ow\xF5""0\xFEgrcszt";
 
 void RDSDecoder::makePrintable(char* str){
     for(byte i = 0; i < strlen(str); i++) {
@@ -312,12 +316,10 @@ void RDSDecoder::makePrintable(char* str){
             str[i] = '\0';
             break;
         }
-        //TODO: implement codepages from standard and do full decoding.
-        // 0x24 is generic currency symbol, not dollar sign
-        // 0x5E is long dash, not caret
-        // 0x60 is double vertical line (box drawing char or pause symbol), not
-        //      backtick
-        // 0x7E is overbar, not tilde
+        // 0x24 is currency sign (U+00A4), not dollar sign
+        // 0x5E is horizontal bar (quotation dash, U+2015), not caret
+        // 0x60 is double vertical line (math norm symbol, U+2016), not backtick
+        // 0x7E is overline (U+203E), not tilde
         // 0x80: a-acute, a-grave, e-acute, e-grave, i-acute, i-grave, o-acute,
         //       o-grave, u-acute, u-grave, N-tilde, C-cedilla, S-cedilla,
         //       scharfes-es, spanish-exclamation, dutch-IJ, a-circ, a-umlaut,
@@ -341,7 +343,7 @@ void RDSDecoder::makePrintable(char* str){
             continue;
         //Any other control character is an undetected error on the receiving
         //side (because the manufacturers of the RDS decoder chip were too cheap
-        //to properly implement the ECC in the standard.
+        //to properly implement the ECC in the standard).
         if(str[i] < 32) str[i] = '?';
         else if(str[i] == 0x24) str[i] = '\xA4';
         else if(str[i] == 0x5E) str[i] = '-';
