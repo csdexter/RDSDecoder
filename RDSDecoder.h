@@ -393,6 +393,8 @@ class RDSDecoder
         inline word swab(word value) { return (value >> 8) | (value << 8); }
 };
 
+typedef void (*TBlockFetcher)(const void *, void *, size_t);
+
 class RDSTranslator
 {
     public:
@@ -621,6 +623,31 @@ class RDSTranslator
         *              unpacked data.
         */
         void unpackTMCFLT(word flt, TRDSTMCFLT *unpacked);
+
+        /*
+        * Description:
+        *   Finds a record by id in an array. Used to lookup event message or
+        *   supplementary information records. The array is assumed to be sorted
+        *   ascendingly by id and to start at id == 1.
+        * Parameters:
+        *   table - pointer to the start of the contiguous sorted array.
+        *   recSize - size in bytes of the records in the array.
+        *   tableSize - size in records of the array.
+        *   idOffset - offset in bytes to the id field in each record.
+        *   wordId - true if the id is a word, false if it's a byte.
+        *   key - the id to look for.
+        *   record - pointer to a buffer at least recSize long that will receive
+        *            the target record if found.
+        *   blockFetcher - pointer to a function used to read an arbitrarily
+        *                  sized block from the record array.
+        * Returns:
+        *   true if a record with an id of key was found and copied to *record,
+        *   false otherwise.
+        */
+        bool locateMessageRecord(const void *table, size_t recSize,
+                                 size_t tableSize, size_t idOffset, bool wordId,
+                                 word key, void *record,
+                                 TBlockFetcher blockFetcher);
 
         /*
         * Description:

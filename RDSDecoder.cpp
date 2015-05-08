@@ -941,3 +941,30 @@ void RDSTranslator::adjustTMCContainerForFLT(uint32_t slices[4], word *maybeFLT,
       slices[i] |= (slices[i + 1] & 0xFFFF0000) >> 16;
     }
 };
+
+bool RDSTranslator::locateMessageRecord(const void *table, size_t recSize,
+                                        size_t tableSize, size_t idOffset,
+                                        bool wordId, word key, void *record,
+                                        TBlockFetcher blockFetcher) {
+    if(!(table || record || blockFetcher || key))
+        return false;
+    if((!wordId && idOffset + sizeof(byte) > recSize) ||
+       (wordId && idOffset + sizeof(word) > recSize))
+        return false;
+    if(!wordId && (tableSize > 256 || key > 256))
+        return false;
+
+    word recNo = key - 1, curId = 0;
+    if(recNo > tableSize - 1)
+        recNo = tableSize - 1;
+    do {
+        blockFetcher((byte *)table + recNo * recSize + idOffset, &curId,
+                     wordId ? sizeof(word) : sizeof(byte));
+        if(curId == key) {
+            blockFetcher((byte *)table + recNo * recSize, record, recSize);
+            return true;
+        };
+    } while(recNo-- > 0);
+
+    return false;
+};

@@ -1,6 +1,7 @@
 #!/usr/bin/python
 """
-  This will read in CSV-formatted records and generate the equivalent C code.
+  This will read in CSV-formatted records and generate the equivalent C code as
+  well as raw EEPROM images.
   Used for generating the C code version of the ISO 14819-2 event list and
   supplementary information strings.
 

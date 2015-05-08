@@ -1,4 +1,3 @@
  -> implement missing parts of the RDS (and related) standards
- -> add hooks for string tables in a serial EEPROM
- -> add the humongous string tables
+ -> make storage options for ISO 14819-2 more flexible/friendly
  -> add example when code complete
