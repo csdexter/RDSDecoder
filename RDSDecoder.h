@@ -593,6 +593,23 @@ class RDSTranslator
         */
         bool readNextTMCLabel(const uint32_t slices[4],
                               TRDSTMCContainerIndex *fp, TRDSTMCLabel *label);
+
+        /*
+        * Description:
+        *   Given an expected quantifier type and the corresponding label which
+        *   defines it, generate a string with the human readable representation
+        *   of the quantifier.
+        * Parameters:
+        *   qType - a nibble specifying the quantifier type, according to
+        *           ISO 14819-2 §3.1.2
+        *   label - a pointer to a TRDSTMCLabel struct containing the decoded
+        *           quantifier value
+        *   buf - a pointer to a character string buffer that will receive the
+        *         human readable representation.
+        *   size - the size of the buffer provided.
+        */
+        void decodeQuantifier(byte qType, TRDSTMCLabel *label, char *buf,
+                              size_t size);
     private:
         /*
         * Description:
@@ -636,8 +653,8 @@ class RDSTranslator
         *   idOffset - offset in bytes to the id field in each record.
         *   wordId - true if the id is a word, false if it's a byte.
         *   key - the id to look for.
-        *   record - pointer to a buffer at least recSize long that will receive
-        *            the target record if found.
+        *   record - pointer to a buffer at least recSize bytes long that will
+        *   receive the target record if found.
         *   blockFetcher - pointer to a function used to read an arbitrarily
         *                  sized block from the record array.
         * Returns:

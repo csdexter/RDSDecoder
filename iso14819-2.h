@@ -64,6 +64,13 @@
 
 /* Sanity check string table configuration */
 #if defined(WITH_RDS_TMC_EVENT_STRING_POINTERS) && \
+ !defined(WITH_RDS_TMC_EVENTS)
+# warning ISO 14819-2 string pointers in event list requested but event list\
+ not enabled: enabling event list in FLASH!
+# define WITH_RDS_TMC_EVENTS
+#endif
+
+#if defined(WITH_RDS_TMC_EVENT_STRING_POINTERS) && \
  !(defined(WITH_RDS_TMC_EVENT_STRINGS_FLASH) ||\
    defined(WITH_RDS_TMC_EVENT_STRINGS_EEPROM))
 # warning ISO 14819-2 string pointers in event list requested but no storage\
@@ -94,6 +101,7 @@
 #define RDS_TMC_QUANTIFIER_UPTO_MILLIMETERS 0xA
 #define RDS_TMC_QUANTIFIER_MHZ 0xB
 #define RDS_TMC_QUANTIFIER_KHZ 0xC
+#define RDS_TMC_QUANTIFIER_LAST RDS_TMC_QUANTIFIER_KHZ
 
 #define RDS_TMC_NATURE_INFORMATION 0x0
 #define RDS_TMC_NATURE_FORECAST 0x1

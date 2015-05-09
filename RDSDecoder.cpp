@@ -18,9 +18,13 @@
 
 #if defined(__GNUC__)
 # if defined(__i386__) || defined(__x86_64__)
+#  define __STDC_FORMAT_MACROS
+#  include <inttypes.h>
+#  include <stdio.h>
 #  define PROGMEM
 #  define PGM_P const char *
 #  define strncpy_P strncpy
+#  define snprintf_P snprintf
 #  define lowByte(x) (uint8_t)((x) & 0xFF)
 #  define highByte(x) (uint8_t)(((x) >> 8) & 0xFF)
 #  define pgm_read_byte(x) (uint8_t)(*x)
@@ -923,6 +927,154 @@ bool RDSTranslator::readNextTMCLabel(const uint32_t slices[4],
     return true;
 };
 
+const char QuantifierText_S_0[] PROGMEM = "%" PRIu8;
+const char QuantifierText_S_1[] PROGMEM = "%" PRIu16;
+const char QuantifierText_S_2[] PROGMEM = "less than %" PRIu16 " meters";
+const char QuantifierText_S_3[] PROGMEM = "%" PRIu8 "%%";
+const char QuantifierText_S_4[] PROGMEM = "of up to %" PRIu8 " km/h";
+const char QuantifierText_S_5[] PROGMEM = "of up to %" PRIu8 " %s";
+const char QuantifierText_S_6[] PROGMEM = "%" PRIi8 " degrees Celsius";
+const char QuantifierText_S_7[] PROGMEM = "%02" PRIu8 ":%02" PRIu8;
+const char QuantifierText_S_8[] PROGMEM = "%2.1f tonnes";
+const char QuantifierText_S_9[] PROGMEM = "%2.1f meters";
+const char QuantifierText_S_A[] PROGMEM = "of up to %" PRIu8 " millimeters";
+const char QuantifierText_S_B[] PROGMEM = "%3.1f MHz";
+const char QuantifierText_S_C[] PROGMEM = "%" PRIu16 " kHz";
+
+PGM_P const QuantifierText_S[13] PROGMEM = {
+    QuantifierText_S_0,
+    QuantifierText_S_1,
+    QuantifierText_S_2,
+    QuantifierText_S_3,
+    QuantifierText_S_4,
+    QuantifierText_S_5,
+    QuantifierText_S_6,
+    QuantifierText_S_7,
+    QuantifierText_S_8,
+    QuantifierText_S_9,
+    QuantifierText_S_A,
+    QuantifierText_S_B,
+    QuantifierText_S_C
+};
+
+void RDSTranslator::decodeQuantifier(byte qType, TRDSTMCLabel *label, char *buf,
+                                     size_t size) {
+  if(!(label && buf))
+      return;
+  if(qType > RDS_TMC_QUANTIFIER_LAST)
+      return;
+  if(!(label->type == RDS_TMC_LABEL_QUANTIFIER_5 ||
+       label->type == RDS_TMC_LABEL_QUANTIFIER_8))
+      return;
+  if(label->type == RDS_TMC_LABEL_QUANTIFIER_5 &&
+     !(qType == RDS_TMC_QUANTIFIER_SMALL_NUMBER ||
+       qType == RDS_TMC_QUANTIFIER_NUMBER ||
+       qType == RDS_TMC_QUANTIFIER_LESSTHAN_METERS ||
+       qType == RDS_TMC_QUANTIFIER_PERCENT ||
+       qType == RDS_TMC_QUANTIFIER_UPTO_KMH ||
+       qType == RDS_TMC_QUANTIFIER_UPTO_MINUTES))
+      return;
+  if(label->type == RDS_TMC_LABEL_QUANTIFIER_8 &&
+    !(qType == RDS_TMC_QUANTIFIER_DEGREES_CELSIUS ||
+      qType == RDS_TMC_QUANTIFIER_TIME ||
+      qType == RDS_TMC_QUANTIFIER_TONNES ||
+      qType == RDS_TMC_QUANTIFIER_METERS ||
+      qType == RDS_TMC_QUANTIFIER_UPTO_MILLIMETERS ||
+      qType == RDS_TMC_QUANTIFIER_MHZ ||
+      qType == RDS_TMC_QUANTIFIER_KHZ))
+      return;
+
+  byte aByte1, aByte2;
+  word aWord;
+  int8_t aSChar;
+  float aFloat;
+  switch(qType) {
+      case RDS_TMC_QUANTIFIER_SMALL_NUMBER:
+          if(label->value <= 28)
+              aByte1 = (label->value ? label->value : 36);
+          else
+              aByte1 = 28 + (label->value - 28) * 2;
+          snprintf_P(buf, size, (PGM_P)(pgm_read_ptr(&QuantifierText_S[qType])),
+                     aByte1);
+          break;
+      case RDS_TMC_QUANTIFIER_NUMBER:
+          if(label->value <= 4)
+              aWord = (label->value ? label->value : 1000);
+          else if(label->value > 4 && label->value <= 14)
+              aWord = (label->value - 4) * 10;
+          else if(label->value > 14)
+              aWord = 100 + (label->value - 14) * 50;
+          snprintf_P(buf, size, (PGM_P)(pgm_read_ptr(&QuantifierText_S[qType])),
+                     aWord);
+          break;
+      case RDS_TMC_QUANTIFIER_LESSTHAN_METERS:
+          aWord = label->value * 10;
+          snprintf_P(buf, size, (PGM_P)(pgm_read_ptr(&QuantifierText_S[qType])),
+                     aWord);
+          break;
+      case RDS_TMC_QUANTIFIER_PERCENT:
+          aByte1 = (label->value - 1) * 5;
+          snprintf_P(buf, size, (PGM_P)(pgm_read_ptr(&QuantifierText_S[qType])),
+                     aByte1);
+          break;
+      case RDS_TMC_QUANTIFIER_UPTO_KMH:
+          aByte1 = (label->value ? label->value * 5 : 160);
+          snprintf_P(buf, size, (PGM_P)(pgm_read_ptr(&QuantifierText_S[qType])),
+                     aByte1);
+          break;
+      case RDS_TMC_QUANTIFIER_UPTO_MINUTES:
+          if(label->value > 0 && label->value <= 10) {
+              aByte1 = label->value * 5;
+              snprintf_P(buf, size,
+                         (PGM_P)(pgm_read_ptr(&QuantifierText_S[qType])),
+                         aByte1, "minutes");
+          } else {
+              if(label->value <= 22)
+                  aByte1 = (label->value ? label->value - 10 : 72);
+              else
+                  aByte1 = 12 + (label->value - 22) * 6;
+              snprintf_P(buf, size,
+                         (PGM_P)(pgm_read_ptr(&QuantifierText_S[qType])),
+                         aByte1, "hours");
+          };
+          break;
+      case RDS_TMC_QUANTIFIER_DEGREES_CELSIUS:
+          aSChar = (int8_t)label->value - 51;
+          snprintf_P(buf, size, (PGM_P)(pgm_read_ptr(&QuantifierText_S[qType])),
+                     aSChar);
+          break;
+      case RDS_TMC_QUANTIFIER_TIME:
+          aByte1 = label->value / 6;
+          aByte2 = (label->value % 6 - 1) * 10;
+          snprintf_P(buf, size, (PGM_P)(pgm_read_ptr(&QuantifierText_S[qType])),
+                     aByte1, aByte2);
+          break;
+      case RDS_TMC_QUANTIFIER_TONNES:
+      case RDS_TMC_QUANTIFIER_METERS:
+          if(label->value <= 100)
+              aFloat = label->value * 0.1;
+          else
+              aFloat = 10.0 + (label->value - 100) * 0.5;
+          snprintf_P(buf, size, (PGM_P)(pgm_read_ptr(&QuantifierText_S[qType])),
+                     aFloat);
+          break;
+      case RDS_TMC_QUANTIFIER_UPTO_MILLIMETERS:
+          aByte1 = label->value;
+          snprintf_P(buf, size, (PGM_P)(pgm_read_ptr(&QuantifierText_S[qType])),
+                     aByte1);
+          break;
+      case RDS_TMC_QUANTIFIER_MHZ:
+      case RDS_TMC_QUANTIFIER_KHZ:
+        //TODO: make this locale-aware (don't hardcode).
+        aWord = decodeAFFrequency(
+          label->value,
+          qType == RDS_TMC_QUANTIFIER_MHZ, RDS_LOCALE_EU);
+        snprintf_P(buf, size, (PGM_P)(pgm_read_ptr(&QuantifierText_S[qType])),
+                   (qType == RDS_TMC_QUANTIFIER_KHZ ? aWord : aWord / 100.0));
+        break;
+  };
+};
+
 void RDSTranslator::adjustTMCContainerForFLT(uint32_t slices[4], word *maybeFLT,
                                              TRDSTMCFLT *unpacked) {
     if(!maybeFLT)
@@ -946,7 +1098,7 @@ bool RDSTranslator::locateMessageRecord(const void *table, size_t recSize,
                                         size_t tableSize, size_t idOffset,
                                         bool wordId, word key, void *record,
                                         TBlockFetcher blockFetcher) {
-    if(!(table || record || blockFetcher || key))
+    if(!(table && record && blockFetcher && key))
         return false;
     if((!wordId && idOffset + sizeof(byte) > recSize) ||
        (wordId && idOffset + sizeof(word) > recSize))
