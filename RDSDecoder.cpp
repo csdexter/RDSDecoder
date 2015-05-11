@@ -358,46 +358,54 @@ void RDSDecoder::makePrintable(char* str){
     }
 }
 
-const char PTY2Text_S_None[] PROGMEM = "None/Undefined";
+const char PTY2Text_S_None[] PROGMEM = "None";
 const char PTY2Text_S_News[] PROGMEM = "News";
 const char PTY2Text_S_Current[] PROGMEM = "Current affairs";
 const char PTY2Text_S_Information[] PROGMEM = "Information";
 const char PTY2Text_S_Sports[] PROGMEM = "Sports";
 const char PTY2Text_S_Education[] PROGMEM = "Education";
 const char PTY2Text_S_Drama[] PROGMEM = "Drama";
-const char PTY2Text_S_Culture[] PROGMEM = "Culture";
+const char PTY2Text_S_Culture[] PROGMEM = "Cultures";
 const char PTY2Text_S_Science[] PROGMEM = "Science";
-const char PTY2Text_S_Varied[] PROGMEM = "Varied";
-const char PTY2Text_S_Pop[] PROGMEM = "Pop";
-const char PTY2Text_S_Rock[] PROGMEM = "Rock";
-const char PTY2Text_S_EasySoft[] PROGMEM = "Easy & soft";
-const char PTY2Text_S_Classical[] PROGMEM = "Classical";
+const char PTY2Text_S_Varied[] PROGMEM = "Varied speech";
+const char PTY2Text_S_Pop[] PROGMEM = "Pop music";
+const char PTY2Text_S_Rock[] PROGMEM = "Rock music";
+const char PTY2Text_S_EasySoft[] PROGMEM = "Easy listening";
+const char PTY2Text_S_LightClassical[] PROGMEM = "Light classics music";
+const char PTY2Text_S_SeriousClassical[] PROGMEM = "Serious classics";
 const char PTY2Text_S_Other[] PROGMEM = "Other music";
 const char PTY2Text_S_Weather[] PROGMEM = "Weather";
 const char PTY2Text_S_Finance[] PROGMEM = "Finance";
-const char PTY2Text_S_Children[] PROGMEM = "Children's";
+const char PTY2Text_S_Children[] PROGMEM = "Children's programmes";
 const char PTY2Text_S_Social[] PROGMEM = "Social affairs";
 const char PTY2Text_S_Religion[] PROGMEM = "Religion";
-const char PTY2Text_S_TalkPhone[] PROGMEM = "Talk & phone-in";
-const char PTY2Text_S_Travel[] PROGMEM = "Travel";
-const char PTY2Text_S_Leisure[] PROGMEM = "Leisure";
-const char PTY2Text_S_Jazz[] PROGMEM = "Jazz";
-const char PTY2Text_S_Country[] PROGMEM = "Country";
-const char PTY2Text_S_National[] PROGMEM = "National";
-const char PTY2Text_S_Oldies[] PROGMEM = "Oldies";
-const char PTY2Text_S_Folk[] PROGMEM = "Folk";
+const char PTY2Text_S_Phone[] PROGMEM = "Phone-in";
+const char PTY2Text_S_Travel[] PROGMEM = "Travel & touring";
+const char PTY2Text_S_Leisure[] PROGMEM = "Leisure & hobby";
+const char PTY2Text_S_Jazz[] PROGMEM = "Jazz music";
+const char PTY2Text_S_Country[] PROGMEM = "Country music";
+const char PTY2Text_S_National[] PROGMEM = "National music";
+const char PTY2Text_S_Oldies[] PROGMEM = "Oldies music";
+const char PTY2Text_S_Folk[] PROGMEM = "Folk music";
 const char PTY2Text_S_Documentary[] PROGMEM = "Documentary";
 const char PTY2Text_S_EmergencyTest[] PROGMEM = "Emergency test";
-const char PTY2Text_S_Emergency[] PROGMEM = "Emergency";
+const char PTY2Text_S_Emergency[] PROGMEM = "Alarm - Alarm!";
+const char PTY2Text_S_Talk[] PROGMEM = "Talk";
+const char PTY2Text_S_ClassicRock[] PROGMEM = "Classic rock";
+const char PTY2Text_S_SoftRock[] PROGMEM = "Soft rock";
 const char PTY2Text_S_Adult[] PROGMEM = "Adult hits";
 const char PTY2Text_S_Top40[] PROGMEM = "Top 40";
 const char PTY2Text_S_Nostalgia[] PROGMEM = "Nostalgia";
 const char PTY2Text_S_RnB[] PROGMEM = "Rhythm and blues";
-const char PTY2Text_S_Language[] PROGMEM = "Language";
+const char PTY2Text_S_SoftRnB[] PROGMEM = "Soft R&B";
+const char PTY2Text_S_Language[] PROGMEM = "Foreign language";
+const char PTY2Text_S_ReligiousMusic[] PROGMEM = "Religious music";
+const char PTY2Text_S_ReligiousTalk[] PROGMEM = "Religious talk";
 const char PTY2Text_S_Personality[] PROGMEM = "Personality";
 const char PTY2Text_S_Public[] PROGMEM = "Public";
 const char PTY2Text_S_College[] PROGMEM = "College";
-const char PTY2Text_S_Spanish[] PROGMEM = "Espanol";
+const char PTY2Text_S_SpanishTalk[] PROGMEM = "Hablar Espanol";
+const char PTY2Text_S_SpanishMusic[] PROGMEM = "Musica Espanol";
 const char PTY2Text_S_HipHop[] PROGMEM = "Hip hop";
 
 PGM_P const PTY2Text_EU[32] PROGMEM = {
@@ -414,15 +422,15 @@ PGM_P const PTY2Text_EU[32] PROGMEM = {
     PTY2Text_S_Pop,
     PTY2Text_S_Rock,
     PTY2Text_S_EasySoft,
-    PTY2Text_S_Classical,
-    PTY2Text_S_Classical,
+    PTY2Text_S_LightClassical,
+    PTY2Text_S_SeriousClassical,
     PTY2Text_S_Other,
     PTY2Text_S_Weather,
     PTY2Text_S_Finance,
     PTY2Text_S_Children,
     PTY2Text_S_Social,
     PTY2Text_S_Religion,
-    PTY2Text_S_TalkPhone,
+    PTY2Text_S_Phone,
     PTY2Text_S_Travel,
     PTY2Text_S_Leisure,
     PTY2Text_S_Jazz,
@@ -439,28 +447,28 @@ PGM_P const PTY2Text_US[32] PROGMEM = {
     PTY2Text_S_News,
     PTY2Text_S_Information,
     PTY2Text_S_Sports,
-    PTY2Text_S_TalkPhone,
+    PTY2Text_S_Talk,
     PTY2Text_S_Rock,
-    PTY2Text_S_Rock,
+    PTY2Text_S_ClassicRock,
     PTY2Text_S_Adult,
-    PTY2Text_S_Rock,
+    PTY2Text_S_SoftRock,
     PTY2Text_S_Top40,
     PTY2Text_S_Country,
     PTY2Text_S_Oldies,
     PTY2Text_S_EasySoft,
     PTY2Text_S_Nostalgia,
     PTY2Text_S_Jazz,
-    PTY2Text_S_Classical,
+    PTY2Text_S_SeriousClassical,
     PTY2Text_S_RnB,
-    PTY2Text_S_RnB,
+    PTY2Text_S_SoftRnB,
     PTY2Text_S_Language,
-    PTY2Text_S_Religion,
-    PTY2Text_S_Religion,
+    PTY2Text_S_ReligiousMusic,
+    PTY2Text_S_ReligiousTalk,
     PTY2Text_S_Personality,
     PTY2Text_S_Public,
     PTY2Text_S_College,
-    PTY2Text_S_Spanish,
-    PTY2Text_S_Spanish,
+    PTY2Text_S_SpanishTalk,
+    PTY2Text_S_SpanishMusic,
     PTY2Text_S_HipHop,
     PTY2Text_S_None,
     PTY2Text_S_None,
@@ -468,16 +476,8 @@ PGM_P const PTY2Text_US[32] PROGMEM = {
     PTY2Text_S_EmergencyTest,
     PTY2Text_S_Emergency};
 
-const byte PTY_EU2US[32] PROGMEM = {0, 1, 0, 2, 3, 23, 0, 0, 0, 0, 7, 5, 12, 15,
-                                    15, 0, 29, 0, 0, 0, 20, 4, 0, 0, 14, 10, 0,
-                                    11, 0, 0, 30, 31};
-const byte PTY_US2EU[32] PROGMEM = {0, 1, 3, 4, 21, 11, 11, 10, 11, 10, 25, 27,
-                                    12, 27, 24, 14, 15, 15, 0, 20, 20, 0, 0, 5,
-                                    0, 0, 0, 0, 0, 16, 30, 31};
-
-void RDSTranslator::getTextForPTY(byte PTY, byte locale, char* text,
-                                    byte textsize){
-    switch(locale){
+void RDSTranslator::getTextForPTY(byte PTY, char* text, byte textsize){
+    switch(_locale){
         case RDS_LOCALE_US:
             strncpy_P(text, (PGM_P)(pgm_read_ptr(&PTY2Text_US[PTY])),
                       textsize);
@@ -487,21 +487,6 @@ void RDSTranslator::getTextForPTY(byte PTY, byte locale, char* text,
                     textsize);
             break;
     }
-}
-
-byte RDSTranslator::translatePTY(byte PTY, byte fromlocale, byte tolocale){
-    if(fromlocale == tolocale) return PTY;
-    else switch(fromlocale){
-        case RDS_LOCALE_US:
-            return pgm_read_byte(&PTY_US2EU[PTY]);
-            break;
-        case RDS_LOCALE_EU:
-            return pgm_read_byte(&PTY_EU2US[PTY]);
-            break;
-    }
-
-    //Never reached
-    return 0;
 }
 
 const char PI2CallSign_S[] PROGMEM = "KEXKFHKFIKGAKGOKGUKGWKGYKIDKITKJRKLOKLZ"
@@ -613,10 +598,10 @@ void RDSTranslator::decodeTMCDuration(byte length, TRDSTime* tmctime) {
     };
 };
 
-word RDSTranslator::decodeAFFrequency(byte AF, bool FM, byte locale) {
+word RDSTranslator::decodeAFFrequency(byte AF, bool FM) {
     if (FM) return (AF + 875) * 10;
     else if (AF < 16) return (AF - 1) * 9 + 153;
-    else if (locale == RDS_LOCALE_US)
+    else if (_locale == RDS_LOCALE_US)
         return (AF - 16) * 10 + 530;
     else return (AF - 16) * 9 + 531;
 };
@@ -1065,10 +1050,8 @@ void RDSTranslator::decodeQuantifier(byte qType, TRDSTMCLabel *label, char *buf,
           break;
       case RDS_TMC_QUANTIFIER_MHZ:
       case RDS_TMC_QUANTIFIER_KHZ:
-        //TODO: make this locale-aware (don't hardcode).
-        aWord = decodeAFFrequency(
-          label->value,
-          qType == RDS_TMC_QUANTIFIER_MHZ, RDS_LOCALE_EU);
+        aWord = decodeAFFrequency(label->value,
+                                  qType == RDS_TMC_QUANTIFIER_MHZ);
         snprintf_P(buf, size, (PGM_P)(pgm_read_ptr(&QuantifierText_S[qType])),
                    (qType == RDS_TMC_QUANTIFIER_KHZ ? aWord : aWord / 100.0));
         break;

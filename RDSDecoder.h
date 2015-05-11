@@ -400,17 +400,17 @@ class RDSTranslator
     public:
         /*
         * Description:
-        *   Translates the given PTY into human-readable text for the given
-        *   locale. At most textsize-1 characters will be copied to the buffer
-        *   at text.
+        *   Constructor, sets locale to be used for all further operations.
         */
-        void getTextForPTY(byte PTY, byte locale, char* text, byte textsize);
+        RDSTranslator(byte locale = RDS_LOCALE_EU) { _locale = locale; }
 
         /*
         * Description:
-        *   Translates the given PTY between the given locales.
+        *   Translates the given PTY into human-readable text, according to the
+        *   current locale. At most textsize-1 characters will be copied to the
+        *   buffer at text.
         */
-        byte translatePTY(byte PTY, byte fromlocale, byte tolocale);
+        void getTextForPTY(byte PTY, char* text, byte textsize);
 
         /*
         * Description:
@@ -471,10 +471,9 @@ class RDSTranslator
         /*
         * Description:
         *   Translates an AF frequency code into a human readable measurement
-        *   in kHz (or tens of kHz if FM is true), valid for the given locale.
+        *   in kHz (or tens of kHz if FM is true), valid for the current locale.
         */
-        word decodeAFFrequency(byte AF, bool FM = true,
-                               byte locale = RDS_LOCALE_EU);
+        word decodeAFFrequency(byte AF, bool FM = true);
 
         /*
         * Description:
@@ -611,6 +610,8 @@ class RDSTranslator
         void decodeQuantifier(byte qType, TRDSTMCLabel *label, char *buf,
                               size_t size);
     private:
+        byte _locale;
+
         /*
         * Description:
         *   Reads from a TMC multi-group message bit container.
