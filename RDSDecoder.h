@@ -155,7 +155,8 @@
 #define RDS_CALLBACK_RT 0x04
 #define RDS_CALLBACK_TMC 0x05
 #define RDS_CALLBACK_RTP 0x06
-#define RDS_CALLBACK_LAST RDS_CALLBACK_RTP
+#define RDS_CALLBACK_ERT 0x07
+#define RDS_CALLBACK_LAST RDS_CALLBACK_ERT
 
 //This holds time of day as received via RDS. Mimicking struct tm from
 //<time.h> for familiarity.
@@ -397,6 +398,14 @@ typedef struct {
 //    First parameter is the first 5 bits of the RT+ message, the second is
 //    always true and the last two contain the remaining 32 bits of the RT+
 //    message.
+//RDS_CALLBACK_ERT:
+//    First parameter is the 5 bit character pair address code, the second is
+//    always true and the last two each contain one character of the eRT text
+//    message. This is implemented like this and not as a static field in
+//    TRDSData because it's UCS-2 or UTF-8 and an MCU has no business dealing
+//    with that or, even less so, storing 128 bytes of it. NOTE: with UTF-8
+//    encoding, a single eRT message may contain anywhere from one to four
+//    Unicode codepoints. NOTE: RT+ counts [displayed] characters, not bytes.
 typedef void (*TRDSCallback)(byte, bool, word, word);
 
 class RDSDecoder

@@ -168,6 +168,11 @@ void RDSDecoder::decodeRDSGroup(word block[]){
                     _callbacks[RDS_CALLBACK_RTP](
                         block[1] & RDS_ODA_GROUP_MASK, true, block[2],
                         block[3]);
+            else if(grouptype == _status.ERT.carriedInGroup)
+                if (_callbacks[RDS_CALLBACK_ERT])
+                    _callbacks[RDS_CALLBACK_ERT](
+                        block[1] & RDS_ODA_GROUP_MASK, true, block[2],
+                        block[3]);
             break;
         case RDS_GROUP_4A:
             unsigned long MJD, CT, ys;
