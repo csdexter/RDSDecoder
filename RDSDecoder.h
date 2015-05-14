@@ -651,8 +651,8 @@ class RDSTranslator
         *   unpacked - pointer to a TRDSRTPlusMessage11 struct that will receive
         *              the unpacked data.
         */
-        void unpackRTPMessage11(byte rTPbits1, word rTPbits2, word rTPbits3,
-                                TRDSRTPlusMessage11 *unpacked);
+        void unpackRTPlusMessage11(byte rTPbits1, word rTPbits2, word rTPbits3,
+                                   TRDSRTPlusMessage11 *unpacked);
 
     private:
         byte _locale;

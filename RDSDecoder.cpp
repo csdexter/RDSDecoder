@@ -1116,9 +1116,9 @@ void RDSTranslator::unpackRTPlusMessage3(word rTPMessage,
     unpacked->templateNumber = rTPMessage & RDS_RTP_MESSAGE_TEMPLATE_MASK;
 };
 
-void RDSTranslator::unpackRTPMessage11(byte rTPbits1, word rTPbits2,
-                                       word rTPbits3,
-                                       TRDSRTPlusMessage11 *unpacked) {
+void RDSTranslator::unpackRTPlusMessage11(byte rTPbits1, word rTPbits2,
+                                          word rTPbits3,
+                                          TRDSRTPlusMessage11 *unpacked) {
     if(!unpacked)
         return;
     unpacked->itemToggle = (bool)(rTPbits1 & RDS_RTP_MESSAGE_ITEM_TOGGLE);
