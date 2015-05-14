@@ -1140,3 +1140,13 @@ void RDSTranslator::unpackRTPlusMessage11(byte rTPbits1, word rTPbits2,
                              RDS_RTP_MESSAGE_START_2_SHL;
     unpacked->lengthMarker2 = rTPbits3 & RDS_RTP_MESSAGE_LENGTH_2_MASK;
 };
+
+void RDSTranslator::unpackERTMessage3(word eRTMessage,
+                                      TRDSERTMessage3 *unpacked) {
+    if(!unpacked)
+        return;
+    unpacked->characterTable = (eRTMessage & RDS_ERT_MESSAGE_CODEPAGE_MASK) >>
+                               RDS_ERT_MESSAGE_CODEPAGE_SHL;
+    unpacked->rtl = (bool)(eRTMessage & RDS_ERT_MESSAGE_RTL);
+    unpacked->utf8 = (bool)(eRTMessage & RDS_ERT_MESSAGE_UTF8);
+};

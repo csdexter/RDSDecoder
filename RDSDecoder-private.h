@@ -150,6 +150,12 @@
 #define RDS_RTP_MESSAGE_START_2_SHL 5
 #define RDS_RTP_MESSAGE_LENGTH_2_MASK word(0x001F)
 
+//Define RDS eRT Message (group 3A) decoding masks
+#define RDS_ERT_MESSAGE_CODEPAGE_MASK word(0x003C)
+#define RDS_ERT_MESSAGE_CODEPAGE_SHL 2
+#define RDS_ERT_MESSAGE_RTL word(0x0002)
+#define RDS_ERT_MESSAGE_UTF8 word(0x0001)
+
 //Define RDS CT (group 4A) decoding masks
 #define RDS_TIME_TZ_MASK 0x0000001FUL
 #define RDS_TIME_TZ_SIGN 0x00000020UL

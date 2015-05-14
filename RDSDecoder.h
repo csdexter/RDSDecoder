@@ -312,6 +312,13 @@ typedef struct __attribute__ ((__packed__)) {
     uint8_t lengthMarker2:5;
 } TRDSRTPlusMessage11;
 
+typedef struct __attribute__ ((__packed__)) {
+    uint16_t reserved:10;
+    uint8_t characterTable:4;
+    uint8_t rtl:1;
+    uint8_t utf8:1;
+} TRDSERTMessage3;
+
 typedef struct {
     byte carriedInGroup;
     word message;
@@ -714,6 +721,17 @@ class RDSTranslator
         */
         void unpackRTPlusMessage11(byte rTPbits1, word rTPbits2, word rTPbits3,
                                    TRDSRTPlusMessage11 *unpacked);
+
+        /*
+        * Description:
+        *   Unpacks a Group 3A eRT message into a TRDSERTMessage3 struct.
+        * Parameters:
+        *   eRTMessage - a word containing block C of group 3A, when associated
+        *                with the AID of eRT.
+        *   unpacked - pointer to a TRDSERTMessage3 struct that will receive
+        *              the unpacked data.
+        */
+        void unpackERTMessage3(word eRTMessage, TRDSERTMessage3 *unpacked);
 
     private:
         byte _locale;
