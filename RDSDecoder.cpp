@@ -149,6 +149,7 @@ void RDSDecoder::decodeRDSGroup(word block[]){
         case RDS_GROUP_6A:
         case RDS_GROUP_6B:
         case RDS_GROUP_7B:
+        case RDS_GROUP_8A:
         case RDS_GROUP_8B:
         case RDS_GROUP_9B:
         case RDS_GROUP_10B:
@@ -157,11 +158,16 @@ void RDSDecoder::decodeRDSGroup(word block[]){
         case RDS_GROUP_12A:
         case RDS_GROUP_12B:
         case RDS_GROUP_13B:
-            if (_callbacks[RDS_CALLBACK_ODA])
-                _callbacks[RDS_CALLBACK_ODA](
-                    block[1] & RDS_ODA_GROUP_MASK, ! (grouptype & 0x01),
-                    ((grouptype & 0x01) ? 0x00 : block[2]), block[3]);
-
+            if(grouptype == _status.TMC.carriedInGroup)
+                if (_callbacks[RDS_CALLBACK_TMC])
+                    _callbacks[RDS_CALLBACK_TMC](
+                        block[1] & RDS_ODA_GROUP_MASK, true, block[2],
+                        block[3]);
+            else if(grouptype == _status.RTP.carriedInGroup)
+                if (_callbacks[RDS_CALLBACK_RTP])
+                    _callbacks[RDS_CALLBACK_RTP](
+                        block[1] & RDS_ODA_GROUP_MASK, true, block[2],
+                        block[3]);
             break;
         case RDS_GROUP_4A:
             unsigned long MJD, CT, ys;
@@ -204,11 +210,6 @@ void RDSDecoder::decodeRDSGroup(word block[]){
             break;
         case RDS_GROUP_7A:
             //TODO: read the standard and do Radio Paging
-            break;
-        case RDS_GROUP_8A:
-            if (_callbacks[RDS_CALLBACK_TMC])
-                _callbacks[RDS_CALLBACK_TMC](
-                    block[1] & RDS_ODA_GROUP_MASK, true, block[2], block[3]);
             break;
         case RDS_GROUP_9A:
             //NOTE: EWS is defined per-country which is a polite way of saying

@@ -85,16 +85,77 @@
 #define RDS_TMC_L1_DIVERSION 0x05
 #define RDS_TMC_L1_EXTENT_ADD8 0x06
 #define RDS_TMC_L1_EXTENT_ADD16 0x07
+#define RDS_RTP_CLASS_DUMMY 0
+#define RDS_RTP_CLASS_ITEM_TITLE 1
+#define RDS_RTP_CLASS_ITEM_ALBUM 2
+#define RDS_RTP_CLASS_ITEM_TRACK 3
+#define RDS_RTP_CLASS_ITEM_ARTIST 4
+#define RDS_RTP_CLASS_ITEM_COMPOSITION 5
+#define RDS_RTP_CLASS_ITEM_MOVEMENT 6
+#define RDS_RTP_CLASS_ITEM_CONDUCTOR 7
+#define RDS_RTP_CLASS_ITEM_COMPOSER 8
+#define RDS_RTP_CLASS_ITEM_BAND 9
+#define RDS_RTP_CLASS_ITEM_COMMENT 10
+#define RDS_RTP_CLASS_ITEM_GENRE 11
+#define RDS_RTP_CLASS_INFO_NEWS 12
+#define RDS_RTP_CLASS_INFO_NEWSLOCAL 13
+#define RDS_RTP_CLASS_INFO_STOCKS 14
+#define RDS_RTP_CLASS_INFO_SPORT 15
+#define RDS_RTP_CLASS_INFO_LOTTERY 16
+#define RDS_RTP_CLASS_INFO_HOROSCOPE 17
+#define RDS_RTP_CLASS_INFO_DAILY 18
+#define RDS_RTP_CLASS_INFO_HEALTH 19
+#define RDS_RTP_CLASS_INFO_EVENT 20
+#define RDS_RTP_CLASS_INFO_SCENE 21
+#define RDS_RTP_CLASS_INFO_CINEMA 22
+#define RDS_RTP_CLASS_INFO_TV 23
+#define RDS_RTP_CLASS_INFO_DATE 24
+#define RDS_RTP_CLASS_INFO_WEATHER 25
+#define RDS_RTP_CLASS_INFO_TRAFFIC 26
+#define RDS_RTP_CLASS_INFO_ALARM 27
+#define RDS_RTP_CLASS_INFO_AD 28
+#define RDS_RTP_CLASS_INFO_URL 29
+#define RDS_RTP_CLASS_INFO_OTHER 30
+#define RDS_RTP_CLASS_STATION_SHORT 31
+#define RDS_RTP_CLASS_STATION_LONG 32
+#define RDS_RTP_CLASS_PROGRAMME_NOW 33
+#define RDS_RTP_CLASS_PROGRAMME_NEXT 34
+#define RDS_RTP_CLASS_PROGRAMME_PART 35
+#define RDS_RTP_CLASS_PROGRAMME_HOST 36
+#define RDS_RTP_CLASS_PROGRAMME_EDITORIAL 37
+#define RDS_RTP_CLASS_PROGRAMME_FREQUENCY 38
+#define RDS_RTP_CLASS_PROGRAMME_HOMEPAGE 39
+#define RDS_RTP_CLASS_PROGRAMME_SUBCHANNEL 40
+#define RDS_RTP_CLASS_PHONE_HOTLINE 41
+#define RDS_RTP_CLASS_PHONE_STUDIO 42
+#define RDS_RTP_CLASS_PHONE_OTHER 43
+#define RDS_RTP_CLASS_SMS_STUDIO 44
+#define RDS_RTP_CLASS_SMS_OTHER 45
+#define RDS_RTP_CLASS_EMAIL_HOTLINE 46
+#define RDS_RTP_CLASS_EMAIL_STUDIO 47
+#define RDS_RTP_CLASS_EMAIL_OTHER 48
+#define RDS_RTP_CLASS_MMS_OTHER 49
+#define RDS_RTP_CLASS_CHAT 50
+#define RDS_RTP_CLASS_CHAT_CENTRE 51
+#define RDS_RTP_CLASS_VOTE_QUESTION 52
+#define RDS_RTP_CLASS_VOTE_CENTRE 53
+#define RDS_RTP_CLASS_PRIVATE_FIRST 56
+#define RDS_RTP_CLASS_PRIVATE_LAST 58
+#define RDS_RTP_CLASS_DESCRIPTOR_PLACE 59
+#define RDS_RTP_CLASS_DESCRIPTOR_APPOINTMENT 60
+#define RDS_RTP_CLASS_DESCRIPTOR_IDENTIFIER 61
+#define RDS_RTP_CLASS_DESCRIPTOR_PURCHASE 62
+#define RDS_RTP_CLASS_DESCRIPTOR_GETDATA 63
 
 //RDS Decoder callback types
 #define RDS_CALLBACK_AF 0x00
 #define RDS_CALLBACK_TDC 0x01
 #define RDS_CALLBACK_AID 0x02
-#define RDS_CALLBACK_ODA 0x03
-#define RDS_CALLBACK_EON 0x04
-#define RDS_CALLBACK_RT 0x05
-#define RDS_CALLBACK_TMC 0x06
-#define RDS_CALLBACK_LAST RDS_CALLBACK_TMC
+#define RDS_CALLBACK_EON 0x03
+#define RDS_CALLBACK_RT 0x04
+#define RDS_CALLBACK_TMC 0x05
+#define RDS_CALLBACK_RTP 0x06
+#define RDS_CALLBACK_LAST RDS_CALLBACK_RTP
 
 //This holds time of day as received via RDS. Mimicking struct tm from
 //<time.h> for familiarity.
@@ -311,10 +372,6 @@ typedef struct {
 //RDS_CALLBACK_AID:
 //    First parameter contains the carried in group, second always true, third
 //    and fourth contain the application message and AID.
-//RDS_CALLBACK_ODA:
-//    First parameter contains the first 5 bits of ODA data, second is true if
-//    data comes from an A group, third and fourth contain the remaining 32 bits
-//    of ODA data.
 //RDS_CALLBACK_EON:
 //    First parameter is 1 if this is an AF pair (variant 4), 2 if this is a
 //    mapped FM frequency pair (variants 5-8) or 3 if this is a mapped AM
@@ -328,6 +385,10 @@ typedef struct {
 //RDS_CALLBACK_TMC:
 //    First parameter is the first 5 bits of the TMC message, the second is
 //    always true and the last two contain the remaining 32 bits of the TMC
+//    message.
+//RDS_CALLBACK_RTP:
+//    First parameter is the first 5 bits of the RT+ message, the second is
+//    always true and the last two contain the remaining 32 bits of the RT+
 //    message.
 typedef void (*TRDSCallback)(byte, bool, word, word);
 
