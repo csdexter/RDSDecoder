@@ -232,6 +232,25 @@ typedef struct {
     uint16_t value;
 } TRDSTMCLabel;
 
+typedef struct __attribute__ ((__packed__)) {
+    uint8_t reserved:2;
+    uint8_t eRT:1;
+    uint8_t cB:1;
+    uint8_t serverControlBits:4;
+    uint8_t templateNumber;
+} TRDSRTPlusMessage3;
+
+typedef struct __attribute__ ((__packed__)) {
+    uint8_t itemToggle:1;
+    uint8_t itemRunning:1;
+    uint8_t contentType1:6;
+    uint8_t startMarker1:6;
+    uint8_t lengthMarker1:6;
+    uint8_t contentType2:6;
+    uint8_t startMarker2:6;
+    uint8_t lengthMarker2:5;
+} TRDSRTPlusMessage11;
+
 typedef struct {
     byte carriedInGroup;
     word message;
@@ -609,6 +628,32 @@ class RDSTranslator
         */
         void decodeQuantifier(byte qType, TRDSTMCLabel *label, char *buf,
                               size_t size);
+
+        /*
+        * Description:
+        *   Unpacks a Group 3A RT+ message into a TRDSRTPlusMessage3 struct.
+        * Parameters:
+        *   rTPMessage - a word containing block C of group 3A, when associated
+        *                with the AID of RT+.
+        *   unpacked - pointer to a TRDSRTPlusMessage3 struct that will receive
+        *              the unpacked data.
+        */
+        void unpackRTPlusMessage3(word rTPMessage,
+                                  TRDSRTPlusMessage3 *unpacked);
+
+        /*
+        * Description:
+        *   Unpacks a Group 11A RT+ message into a TRDSRTPlusMessage11 struct.
+        * Parameters:
+        *   rTPbits1 - a byte containing bits 36-32 of the RT+ message.
+        *   rTPbits2 - a word containing bits 31-16 of the RT+ message.
+        *   rTPbits3 - a word containing bits 15-0 of the RT+ message.
+        *   unpacked - pointer to a TRDSRTPlusMessage11 struct that will receive
+        *              the unpacked data.
+        */
+        void unpackRTPMessage11(byte rTPbits1, word rTPbits2, word rTPbits3,
+                                TRDSRTPlusMessage11 *unpacked);
+
     private:
         byte _locale;
 

@@ -1103,3 +1103,39 @@ bool RDSTranslator::locateMessageRecord(const void *table, size_t recSize,
 
     return false;
 };
+
+void RDSTranslator::unpackRTPlusMessage3(word rTPMessage,
+                                         TRDSRTPlusMessage3 *unpacked) {
+    if(!unpacked)
+        return;
+
+    unpacked->eRT = (bool)(rTPMessage & RDS_RTP_MESSAGE_ERT);
+    unpacked->cB = (bool)(rTPMessage & RDS_RTP_MESSAGE_CB);
+    unpacked->serverControlBits = (rTPMessage & RDS_RTP_MESSAGE_SCB_MASK) >>
+                                  RDS_RTP_MESSAGE_SCB_SHL;
+    unpacked->templateNumber = rTPMessage & RDS_RTP_MESSAGE_TEMPLATE_MASK;
+};
+
+void RDSTranslator::unpackRTPMessage11(byte rTPbits1, word rTPbits2,
+                                       word rTPbits3,
+                                       TRDSRTPlusMessage11 *unpacked) {
+    if(!unpacked)
+        return;
+    unpacked->itemToggle = (bool)(rTPbits1 & RDS_RTP_MESSAGE_ITEM_TOGGLE);
+    unpacked->itemRunning = (bool)(rTPbits1 & RDS_RTP_MESSAGE_ITEM_RUNNING);
+    unpacked->contentType1 = ((rTPbits1 & RDS_RTP_MESSAGE_CONTENT_1_1_MASK) <<
+                              RDS_RTP_MESSAGE_CONTENT_1_1_SHR) |
+                             ((rTPbits2 & RDS_RTP_MESSAGE_CONTENT_1_2_MASK) >>
+                              RDS_RTP_MESSAGE_CONTENT_1_2_SHL);
+    unpacked->startMarker1 = (rTPbits2 & RDS_RTP_MESSAGE_START_1_MASK) >>
+                             RDS_RTP_MESSAGE_START_1_SHL;
+    unpacked->lengthMarker1 = (rTPbits2 & RDS_RTP_MESSAGE_LENGTH_1_MASK) >>
+                              RDS_RTP_MESSAGE_LENGTH_1_SHL;
+    unpacked->contentType2 = ((rTPbits2 & RDS_RTP_MESSAGE_CONTENT_2_1_MASK) <<
+                              RDS_RTP_MESSAGE_CONTENT_2_1_SHR) |
+                             ((rTPbits3 & RDS_RTP_MESSAGE_CONTENT_2_2_MASK) >>
+                              RDS_RTP_MESSAGE_CONTENT_2_2_SHL);
+    unpacked->startMarker2 = (rTPbits3 & RDS_RTP_MESSAGE_START_2_MASK) >>
+                             RDS_RTP_MESSAGE_START_2_SHL;
+    unpacked->lengthMarker2 = rTPbits3 & RDS_RTP_MESSAGE_LENGTH_2_MASK;
+};
