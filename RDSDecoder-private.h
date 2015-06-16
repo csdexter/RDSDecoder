@@ -35,7 +35,7 @@
 #define RDS_PTYNAB word(0x0010)
 #define RDS_PTYN_ADDRESS word(0x0001)
 
-//Define RDS SL (group 1A) decoding values
+//Define RDS SL (group 1A) values and decoding masks
 #define RDS_SLABEL_TYPE_PAGINGECC 0x00
 #define RDS_SLABEL_TYPE_TMCID 0x01
 #define RDS_SLABEL_TYPE_PAGINGID 0x02
@@ -51,6 +51,17 @@
 #define RDS_PIN_HOUR_MASK 0x07C0
 #define RDS_PIN_HOUR_SHR 6
 #define RDS_PIN_MINUTE_MASK word(0x003F)
+#define RDS_PAGING_TNGID_MASK word(0x001C)
+#define RDS_PAGING_TNGID_SHR 2
+#define RDS_PAGING_TNGID_NONE 0x0
+#define RDS_PAGING_TNGID_00_99 0x1
+#define RDS_PAGING_TNGID_00_39 0x2
+#define RDS_PAGING_TNGID_40_99 0x3
+#define RDS_PAGING_TNGID_40_69 0x4
+#define RDS_PAGING_TNGID_70_99 0x5
+#define RDS_PAGING_TNGID_00_19 0x6
+#define RDS_PAGING_TNGID_20_39 0x7
+#define RDS_PAGING_BSISID_MASK word(0x0003)
 
 //Define RDS ODA (group 3A) values and decoding masks
 #define RDS_AID_DEFAULT 0x0000
