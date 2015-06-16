@@ -168,11 +168,16 @@
 #define RDS_TIME_MJD1_MASK word(0x0003)
 #define RDS_TIME_MJD1_SHL 15
 
-//Define RDS EON (group 14A) decoding masks
+//Define RDS EON (group 14A) values and decoding masks
 #define RDS_EON_TP word(0x0010)
 #define RDS_EON_MASK word(0x000F)
-#define RDS_EON_PTY_MASK 0xF800
-#define RDS_EON_PTY_SHR 11
+#define RDS_EON_PTY_A_MASK 0xF800
+#define RDS_EON_PTY_A_SHR 11
+#define RDS_EON_PTY_B_MASK word(0x0006)
+#define RDS_EON_PTY_B_SHR 1
+#define RDS_EON_PTY_B_NEWS 0x1
+#define RDS_EON_PTY_B_WEATHER 0x2
+#define RDS_EON_PTY_B_ALARM 0x3
 #define RDS_EON_TA_A word(0x0001)
 #define RDS_EON_TA_B word(0x0008)
 #define RDS_EON_TYPE_PS_SA0 0x00

@@ -413,9 +413,9 @@ class RDSDecoder
     public:
         /*
         * Description:
-        *   Default constructor.
+        *   Default constructor, sets locale for further use.
         */
-        RDSDecoder() { resetRDS(); }
+        RDSDecoder(byte locale = RDS_LOCALE_EU);
 
         /*
         * Description:
@@ -463,6 +463,7 @@ class RDSDecoder
         TRDSTime _time;
         bool _rdstextab, _rdsptynab, _havect;
         TRDSCallback _callbacks[RDS_CALLBACK_LAST + 1];
+        byte _locale;
 
         /*
         * Description:
@@ -476,6 +477,17 @@ class RDSDecoder
         *   as is customary. This helps with filtering out noisy strings.
         */
         void makePrintable(char* str);
+
+        /*
+        * Description:
+        *   Maps a short PTY(ON) code as sent in Group 14B to a PTY value,
+        *   obeying the current locale.
+        * Parameters:
+        *   shortPTY - the short PTY(ON) to map (decode)
+        * Returns:
+        *   mapped PTY code, according to the current locale.
+        */
+        byte mapShortPTY(byte shortPTY);
 
         /*
         * Description:

@@ -241,7 +241,8 @@ void RDSDecoder::decodeRDSGroup(word block[]){
                 case RDS_EON_TYPE_PS_SA3:
                     twochars = swab(block[2]);
                     strncpy(
-                        &_status.EON.programService[(block[1] & RDS_EON_MASK) * 2],
+                        &_status.EON.programService[
+                            (block[1] & RDS_EON_MASK) * 2],
                         (char *)&twochars, 2);
                     break;
                 case RDS_EON_TYPE_AF:
@@ -264,7 +265,8 @@ void RDSDecoder::decodeRDSGroup(word block[]){
                            sizeof(_status.EON.linkageInformation));
                     break;
                 case RDS_EON_TYPE_PTYTA:
-                    _status.EON.PTY = (block[2] & RDS_EON_PTY_MASK) >> RDS_EON_PTY_SHR;
+                    _status.EON.PTY = (block[2] & RDS_EON_PTY_A_MASK) >>
+                        RDS_EON_PTY_A_SHR;
                     _status.EON.TA = block[2] & RDS_EON_TA_A;
                     break;
                 case RDS_EON_TYPE_PIN:
@@ -276,7 +278,8 @@ void RDSDecoder::decodeRDSGroup(word block[]){
             _status.EON.programIdentifier = block[3];
             if (grouptype == RDS_GROUP_14B)
                 _status.EON.TA = block[1] & RDS_EON_TA_B;
-               //TODO: implement PTY(ON): News/Weather/Alarm
+                _status.EON.PTY = mapShortPTY(
+                    (block[1] & RDS_EON_PTY_B_MASK) >> RDS_EON_PTY_B_SHR);
             break;
         case RDS_GROUP_15A:
             //Withdrawn and currently unallocated, ignore
@@ -363,6 +366,28 @@ void RDSDecoder::makePrintable(char* str){
             str[i] = (char)pgm_read_byte(&RDS2LCD_S[str[i] - 0x80]);
     }
 }
+
+RDSDecoder::RDSDecoder(byte locale) {
+    _locale = locale;
+    resetRDS();
+}
+
+byte RDSDecoder::mapShortPTY(byte shortPTY) {
+    if(!shortPTY)
+        return 0; // PTY of None/Undefined
+
+    switch(shortPTY) {
+        case RDS_EON_PTY_B_NEWS:
+            return 1; // PTY of News
+            break;
+        case RDS_EON_PTY_B_WEATHER:
+            return (_locale == RDS_LOCALE_EU) ? 16 : 29; // PTY of Weather
+            break;
+        case RDS_EON_PTY_B_ALARM:
+            return 31; // PTY of Alarm
+            break;
+    };
+};
 
 const char PTY2Text_S_None[] PROGMEM = "None";
 const char PTY2Text_S_News[] PROGMEM = "News";
