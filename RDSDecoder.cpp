@@ -43,6 +43,7 @@ void RDSDecoder::registerCallback(byte type, TRDSCallback callback){
 void RDSDecoder::decodeRDSGroup(word block[]){
     byte grouptype;
     word fourchars[2];
+    bool pagingCallback = false;
 
     _status.programIdentifier = block[0];
     grouptype = lowByte((block[1] & RDS_TYPE_MASK) >> RDS_TYPE_SHR);
@@ -79,17 +80,45 @@ void RDSDecoder::decodeRDSGroup(word block[]){
                 case RDS_SLABEL_TYPE_PAGINGECC:
                     _status.extendedCountryCode = lowByte(block[2]);
                     _status.pagingOperatorCode = highByte(block[2]) & 0x0F;
+                    pagingCallback = true;
                     break;
                 case RDS_SLABEL_TYPE_TMCID:
                     _status.tmcIdentification = block[2] & RDS_SLABEL_VALUE_MASK;
                     break;
                 case RDS_SLABEL_TYPE_PAGINGID:
-                    _status.pagingIdentification = block[2] & RDS_SLABEL_VALUE_MASK;
+                    _status.pagingOperatorCode = (
+                        block[2] & RDS_PAGING_OPC_MASK) >> RDS_PAGING_OPC_SHR;
+                    _status.pagingAreaCode = block[2] & RDS_PAGING_PAC_MASK;
+                    pagingCallback = true;
                     break;
                 case RDS_SLABEL_TYPE_LANGUAGE:
                     _status.languageCode = lowByte(block[2]);
                     break;
             };
+            if(!(block[3] & RDS_PIN_DAY_MASK)) {
+                pagingCallback = true;
+                if((bool)(block[3] & RDS_PIN_PAGING_TYPE0)) {
+                    switch((block[3] & RDS_PIN_PAGING_TYPE1_MASK) >>
+                            RDS_PIN_PAGING_TYPE1_SHR) {
+                        case RDS_PIN_PAGING_TYPE1_ECC:
+                            _status.extendedCountryCode = lowByte(block[3]);
+                            break;
+                        case RDS_PIN_PAGING_TYPE1_CCF:
+                            _status.currentCarrierFrequency = lowByte(block[3]);
+                            break;
+                    };
+                } else {
+                    _status.pagingAreaCode = (
+                        block[3] & RDS_PIN_PAGING_TYPE0_PAC_MASK) >>
+                        RDS_PIN_PAGING_TYPE0_PAC_SHR;
+                    _status.pagingOperatorCode = block[3] &
+                        RDS_PIN_PAGING_TYPE0_OPC_MASK;
+                };
+            };
+            if(pagingCallback && _callbacks[RDS_CALLBACK_SLP])
+                _callbacks[RDS_CALLBACK_SLP](
+                    block[1] & (RDS_PAGING_TNGID_MASK | RDS_PAGING_BSISID_MASK),
+                    true, block[2], block[3]);
         case RDS_GROUP_1B:
             _status.programItemNumber = block[3];
             break;

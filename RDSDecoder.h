@@ -156,7 +156,8 @@
 #define RDS_CALLBACK_TMC 0x05
 #define RDS_CALLBACK_RTP 0x06
 #define RDS_CALLBACK_ERT 0x07
-#define RDS_CALLBACK_LAST RDS_CALLBACK_ERT
+#define RDS_CALLBACK_SLP 0x08
+#define RDS_CALLBACK_LAST RDS_CALLBACK_SLP
 
 //This holds time of day as received via RDS. Mimicking struct tm from
 //<time.h> for familiarity.
@@ -358,7 +359,8 @@ typedef struct {
     byte extendedCountryCode;
     byte languageCode;
     word tmcIdentification;
-    word pagingIdentification;
+    byte pagingAreaCode;
+    byte currentCarrierFrequency;
     TRDSAppID IRDS;
     TRDSAppID TMC;
     TRDSAppID RTP;
@@ -406,6 +408,15 @@ typedef struct {
 //    with that or, even less so, storing 128 bytes of it. NOTE: with UTF-8
 //    encoding, a single eRT message may contain anywhere from one to four
 //    Unicode codepoints. NOTE: RT+ counts [displayed] characters, not bytes.
+//RDS_CALLBACK_SLP:
+//    First parameter is the 5 bit Paging field in the 1A group, the second is
+//    always true, the third contains the slow labelling code (when used for
+//    paging) and the fourth contains the paging information transmitted in the
+//    PIN field, if applicable (i.e. if the day subfield of PIN is all-zeros).
+//    NOTE: this is only meant for decoding the J3-J0 bits storing the interval
+//    number so that a receiver can synchronize to its corresponding time slice,
+//    all the other information in the group 1A paging message is already
+//    available in the TRDSData struct.
 typedef void (*TRDSCallback)(byte, bool, word, word);
 
 class RDSDecoder
