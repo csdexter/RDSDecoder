@@ -1233,6 +1233,7 @@ void RDSTranslator::unpackPagingMessage13(byte ePbits1, word ePbits2,
 void RDSTranslator::unpackRDSPage(TRDSRawData page[], byte size,
                                   TRDSPage *unpacked) {
     char *pmtp;
+    word twochars;
 
     if(!unpacked)
         return;
@@ -1245,6 +1246,15 @@ void RDSTranslator::unpackRDSPage(TRDSRawData page[], byte size,
         case RDS_PAGING_SEGMENT_FUNCTION_1:
             unpacked->pageType = RDS_PAGING_FUNCTION;
             unpackPageHeader(page[0].blockC, page[0].blockD, unpacked);
+            unpacked->countryCode = (
+                (lowByte(page[0].blockD) & 0xF0) >> 4) * 100 +
+                (lowByte(page[0].blockD) & 0x0F) * 10 +
+                (highByte(page[1].blockC) & 0xF0) >> 4;
+            unpacked->pageMessage = (char *)calloc(4 + 1, sizeof(char));
+            unpacked->pageMessage[0] = highByte(page[1].blockC) & 0x0F;
+            unpacked->pageMessage[1] = lowByte(page[1].blockC);
+            twochars = swab(page[1].blockD);
+            strncpy(&unpacked->pageMessage[2], (char *)&twochars, 2);
             break;
         case RDS_PAGING_SEGMENT_10DIGIT_1:
         case RDS_PAGING_SEGMENT_18DIGIT_1:
@@ -1264,10 +1274,36 @@ void RDSTranslator::unpackRDSPage(TRDSRawData page[], byte size,
         case RDS_PAGING_SEGMENT_15DIGIT_1:
             unpacked->pageType = RDS_PAGING_15DIGIT;
             unpackPageHeader(page[0].blockC, page[0].blockD, unpacked);
+            unpacked->countryCode = (
+                (lowByte(page[0].blockD) & 0xF0) >> 4) * 100 +
+                (lowByte(page[0].blockD) & 0x0F) * 10 +
+                (highByte(page[1].blockC) & 0xF0) >> 4;
+            unpacked->pageMessage = (char *)calloc(15 + 1, sizeof(char));
+            unpacked->pageMessage[0] = (
+                (highByte(page[1].blockC) & 0x0F) == 0xA ? ' ' :
+                (highByte(page[1].blockC) & 0x0F) + '0');
+            pmtp = unpacked->pageMessage + 1;
+            BCD2Char((byte)lowByte(page[1].blockC), pmtp);
+            pmtp += 2;
+            BCD2Char(page[1].blockD, pmtp);
+            pmtp += 4;
+            BCD2Char(page[2].blockC, pmtp);
+            pmtp += 4;
+            BCD2Char(page[2].blockD, pmtp);
             break;
         case RDS_PAGING_SEGMENT_ALPHA_1:
             unpacked->pageType = RDS_PAGING_ALPHA;
             unpackPageHeader(page[0].blockC, page[0].blockD, unpacked);
+            unpacked->pageMessage = (char *)calloc((size - 1) * 4 + 1,
+                                                   sizeof(char));
+            for(byte i = 1; i < size; i++) {
+                twochars = swab(page[i].blockC);
+                strncpy(&unpacked->pageMessage[(i - 1) * 4],
+                        (char *)&twochars, 2);
+                twochars = swab(page[i].blockD);
+                strncpy(&unpacked->pageMessage[(i - 1) * 4 + 2],
+                        (char *)&twochars, 2);
+            };
             break;
         default:
             //Invalid Group 7A sequence.
