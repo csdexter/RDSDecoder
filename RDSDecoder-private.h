@@ -217,6 +217,26 @@
 #define RDS_EON_TYPE_PIN 0x0E
 #define RDS_EON_TYPE_INHOUSE 0x0F
 
+//Define RDS Enhanced Paging (group 13A) values and decoding masks
+#define RDS_PAGING_CS_MASK word(0x0018)
+#define RDS_PAGING_CS_SHR 3
+#define RDS_PAGING_CS_1MIN 0x0
+#define RDS_PAGING_CS_2MIN_ODD 0x02
+#define RDS_PAGING_CS_2MIN_EVEN 0x03
+#define RDS_PAGING_TYPE_MASK word(0x0007)
+#define RDS_PAGING_TYPE_25BIT 0x0
+#define RDS_PAGING_TYPE_50BIT_1 0x1
+#define RDS_PAGING_TYPE_50BIT_2 0x2
+#define RDS_PAGING_TYPE_VAS 0x3
+#define RDS_PAGING_IT_MASK 0xF000
+#define RDS_PAGING_IT_SHR 12
+#define RDS_PAGING_SORT_MASK 0x0C00
+#define RDS_PAGING_SORT_SHR 10
+#define RDS_PAGING_SORT_NONE 0x0
+#define RDS_PAGING_SORT_ASC 0x2
+#define RDS_PAGING_SORT_DESC 0x3
+#define RDS_PAGING_ADDR1_MASK 0x01FF
+
 //Define RDS group types
 #define RDS_GROUP_0A 0x00
 #define RDS_GROUP_0B 0x01

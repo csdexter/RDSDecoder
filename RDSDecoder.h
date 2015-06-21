@@ -157,7 +157,9 @@
 #define RDS_CALLBACK_RTP 0x06
 #define RDS_CALLBACK_ERT 0x07
 #define RDS_CALLBACK_SLP 0x08
-#define RDS_CALLBACK_LAST RDS_CALLBACK_SLP
+#define RDS_CALLBACK_P7 0x09
+#define RDS_CALLBACK_P13 0x0A
+#define RDS_CALLBACK_LAST RDS_CALLBACK_P13
 
 //This holds time of day as received via RDS. Mimicking struct tm from
 //<time.h> for familiarity.
@@ -186,7 +188,7 @@ typedef struct __attribute__ ((__packed__)) {
     uint8_t romClassNumber:5;
     uint16_t serialNumber:10;
     uint8_t scopeFlag:1;
-} TRDSIRDSMessage;
+} TRDSIRDSMessage3;
 
 typedef struct __attribute__ ((__packed__)) {
   uint8_t variantCode:2;
@@ -210,6 +212,21 @@ typedef struct __attribute__ ((__packed__)) {
     };
   };
 } TRDSTMCMessage3;
+
+typedef struct __attribute__ ((__packed__)) {
+    // uint8_t reserved:2;
+    uint8_t eRT:1;
+    uint8_t cB:1;
+    uint8_t serverControlBits:4;
+    uint8_t templateNumber;
+} TRDSRTPlusMessage3;
+
+typedef struct __attribute__ ((__packed__)) {
+    // uint16_t reserved:10;
+    uint8_t characterTable:4;
+    uint8_t rtl:1;
+    uint8_t utf8:1;
+} TRDSERTMessage3;
 
 typedef struct __attribute__ ((__packed__)) {
   // bits X4-X0
@@ -296,14 +313,6 @@ typedef struct {
 } TRDSTMCLabel;
 
 typedef struct __attribute__ ((__packed__)) {
-    uint8_t reserved:2;
-    uint8_t eRT:1;
-    uint8_t cB:1;
-    uint8_t serverControlBits:4;
-    uint8_t templateNumber;
-} TRDSRTPlusMessage3;
-
-typedef struct __attribute__ ((__packed__)) {
     uint8_t itemToggle:1;
     uint8_t itemRunning:1;
     uint8_t contentType1:6;
@@ -315,11 +324,13 @@ typedef struct __attribute__ ((__packed__)) {
 } TRDSRTPlusMessage11;
 
 typedef struct __attribute__ ((__packed__)) {
-    uint16_t reserved:10;
-    uint8_t characterTable:4;
-    uint8_t rtl:1;
-    uint8_t utf8:1;
-} TRDSERTMessage3;
+    uint8_t cycleSelection:2;
+    uint8_t variantCode:3;
+    uint8_t interval:4;
+    uint8_t messageSorting:2;
+    // uint8_t reserved:1;
+    uint32_t addressNotification:25;
+} TRDSPagingMessage13;
 
 typedef struct {
     byte carriedInGroup;
@@ -417,6 +428,13 @@ typedef struct {
 //    number so that a receiver can synchronize to its corresponding time slice,
 //    all the other information in the group 1A paging message is already
 //    available in the TRDSData struct.
+//RDS_CALLBACK_P7:
+//RDS_CALLBACK_P13:
+//    First parameter is the Paging A/B bit and the 4-bit Paging Segment
+//    Address, the second is always true and the third and fourth contain the
+//    remaining 32 bits of the paging message. RDS_CALLBACK_P7 is for normal
+//    paging transmitted in group 7A, whereas RDS_CALLBACK_P13 is for enhanced
+//    paging transmitted in group 13A.
 typedef void (*TRDSCallback)(byte, bool, word, word);
 
 class RDSDecoder
@@ -764,6 +782,22 @@ class RDSTranslator
         *              the unpacked data.
         */
         void unpackERTMessage3(word eRTMessage, TRDSERTMessage3 *unpacked);
+
+        /*
+        * Description:
+        *   Unpacks a Group 13A Enhanced Paging message into a 
+        *   TRDSPagingMessage13 struct.
+        * Parameters:
+        *   ePbits1 - a byte containing the CS and STY bits of the message.
+        *   ePbits2 - a word containing the IT, S, X and high address
+        *             notification bits of the message.
+        *   ePbits3 - a word containing the low address notification bits of the
+        *             message.
+        *   unpacked - pointer to a TRDSPagingMessage13 struct that will receive
+        *              the unpacked data.
+        */
+        void unpackPagingMessage13(byte ePbits1, word ePbits2, word ePbits3,
+                                   TRDSPagingMessage13 *unpacked);
 
     private:
         byte _locale;

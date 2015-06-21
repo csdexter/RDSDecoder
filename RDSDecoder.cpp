@@ -243,7 +243,9 @@ void RDSDecoder::decodeRDSGroup(word block[]){
                     block[3]);
             break;
         case RDS_GROUP_7A:
-            //TODO: read the standard and do Radio Paging
+            if (_callbacks[RDS_CALLBACK_P7])
+                _callbacks[RDS_CALLBACK_P7](
+                    block[1] & RDS_ODA_GROUP_MASK, true, block[2], block[3]);
             break;
         case RDS_GROUP_9A:
             //NOTE: EWS is defined per-country which is a polite way of saying
@@ -260,7 +262,9 @@ void RDSDecoder::decodeRDSGroup(word block[]){
                     (char *)&fourchars, 4);
             break;
         case RDS_GROUP_13A:
-            //TODO: read the standard and do Enhanced Radio Paging
+            if (_callbacks[RDS_CALLBACK_P13])
+                _callbacks[RDS_CALLBACK_P13](
+                    block[1] & RDS_ODA_GROUP_MASK, true, block[2], block[3]);
             break;
         case RDS_GROUP_14A:
             switch(block[1] & RDS_EON_MASK){
@@ -1208,4 +1212,19 @@ void RDSTranslator::unpackERTMessage3(word eRTMessage,
                                RDS_ERT_MESSAGE_CODEPAGE_SHL;
     unpacked->rtl = (bool)(eRTMessage & RDS_ERT_MESSAGE_RTL);
     unpacked->utf8 = (bool)(eRTMessage & RDS_ERT_MESSAGE_UTF8);
+};
+
+void RDSTranslator::unpackPagingMessage13(byte ePbits1, word ePbits2,
+                                          word ePbits3,
+                                          TRDSPagingMessage13 *unpacked) {
+    if(!unpacked)
+        return;
+    unpacked->cycleSelection = (ePbits1 & RDS_PAGING_CS_MASK) >>
+                               RDS_PAGING_CS_SHR;
+    unpacked->variantCode = ePbits1 & RDS_PAGING_TYPE_MASK;
+    unpacked->interval = (ePbits2 & RDS_PAGING_IT_MASK) >> RDS_PAGING_IT_SHR;
+    unpacked->messageSorting = (ePbits2 & RDS_PAGING_SORT_MASK) >>
+                               RDS_PAGING_SORT_SHR;
+    unpacked->addressNotification = ((ePbits2 & RDS_PAGING_ADDR1_MASK) << 16) |
+                                    ePbits3;
 };
