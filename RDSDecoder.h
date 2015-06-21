@@ -146,6 +146,7 @@
 #define RDS_RTP_CLASS_DESCRIPTOR_IDENTIFIER 61
 #define RDS_RTP_CLASS_DESCRIPTOR_PURCHASE 62
 #define RDS_RTP_CLASS_DESCRIPTOR_GETDATA 63
+#define RDS_PAGING_AB word(0x0010)
 
 //RDS Decoder callback types
 #define RDS_CALLBACK_AF 0x00
@@ -322,6 +323,28 @@ typedef struct __attribute__ ((__packed__)) {
     uint8_t startMarker2:6;
     uint8_t lengthMarker2:5;
 } TRDSRTPlusMessage11;
+
+typedef struct {
+    byte fiveBits;
+    word blockC, blockD;
+} TRDSRawData;
+
+enum {
+  RDS_PAGING_NOMESSAGE = 0x0,
+  RDS_PAGING_FUNCTION = 0x1,
+  RDS_PAGING_10DIGIT = 0x2,
+  RDS_PAGING_18DIGIT = 0x4,
+  RDS_PAGING_15DIGIT = 0x7,
+  RDS_PAGING_ALPHA = 0x8
+};
+
+typedef struct {
+    byte pageType;
+    byte groupCode;
+    word individualCode;
+    word countryCode;
+    char *pageMessage;
+} TRDSPage;
 
 typedef struct __attribute__ ((__packed__)) {
     uint8_t cycleSelection:2;
@@ -799,6 +822,26 @@ class RDSTranslator
         void unpackPagingMessage13(byte ePbits1, word ePbits2, word ePbits3,
                                    TRDSPagingMessage13 *unpacked);
 
+        /*
+        * Description:
+        *   Due to the encoding of the RDS pager messages, all parts comprising
+        *   such a message have to be known before the type of the message (and
+        *   thus the decoding method to be used) can be evaluated. This method
+        *   takes an array of TRDSRawData structs and fills in a TRDSPage struct
+        *   with the re-assembled and unpacked page. If the page contained a
+        *   message, enough memory is allocated for its string representation
+        *   and a pointer to that memory is also stored in the TRDSPage struct.
+        *   Ownership of that allocation is transferred to the caller.
+        * Parameters:
+        *   page - an array of TRDSRawData structs, as received between two
+        *          transitions of the Paging A/B flag (i.e. one complete and
+        *          contiguous page).
+        *   size - the number of Group 7A messages this page was made up of.
+        *   unpacked - pointer to a TRDSPage struct that will receive the
+        *              unpacked and re-assembled data.
+        */
+        void unpackRDSPage(TRDSRawData page[], byte size, TRDSPage *unpacked);
+
     private:
         byte _locale;
 
@@ -856,6 +899,33 @@ class RDSTranslator
                                  size_t tableSize, size_t idOffset, bool wordId,
                                  word key, void *record,
                                  TBlockFetcher blockFetcher);
+
+        /*
+        * Description:
+        *   Unpacks the RDS paging message header into certain members of a
+        *   TRDSPage struct. NOTE: this is compatible with both normal and
+        *   enhanced paging.
+        * Parameters:
+        *   block3 - the Y1, Y2, Z1 and Z2 digits from a Group 7A message.
+        *   block4 - the Z3 and Z4 digits from a Group 7A message.
+        *   unpacked - pointer to a TRDSPage struct whose members will receive
+        *   the unpacked data.
+        */
+        void unpackPageHeader(word block3, word block4, TRDSPage *unpacked);
+
+        /*
+        * Description:
+        *   Decodes BCD-encoded nibbles to their ASCII equivalents.
+        * Parameters:
+        *   BCD - the nibbles containing BCD values to convert to text.
+        *   text - pointer to a buffer that will receive the decoded output. 0xA
+        *          (an illegal BCD value) in input will be translated to '\x20'
+        *          (i.e. space) in the output, as per §M.2.5.3 of RDS. NOTE: no
+        *          '\0' will be added after the decoded output!
+        */
+        void BCD2Char(byte BCD, char *text);
+        void BCD2Char(word BCD, char *text);
+        void BCD2Char(word BCD1, word BCD2, char *text);
 
         /*
         * Description:

@@ -15,6 +15,7 @@
 #include "iso14819-2.h"
 
 #include <string.h>
+#include <stdlib.h>
 
 #if defined(__GNUC__)
 # if defined(__i386__) || defined(__x86_64__)
@@ -1227,4 +1228,87 @@ void RDSTranslator::unpackPagingMessage13(byte ePbits1, word ePbits2,
                                RDS_PAGING_SORT_SHR;
     unpacked->addressNotification = ((ePbits2 & RDS_PAGING_ADDR1_MASK) << 16) |
                                     ePbits3;
+};
+
+void RDSTranslator::unpackRDSPage(TRDSRawData page[], byte size,
+                                  TRDSPage *unpacked) {
+    char *pmtp;
+
+    if(!unpacked)
+        return;
+    switch(page[0].fiveBits & RDS_PAGING_SEGMENT_MASK) {
+        case RDS_PAGING_SEGMENT_NOMESSAGE:
+            unpacked->pageType = RDS_PAGING_NOMESSAGE;
+            unpackPageHeader(page[0].blockC, page[0].blockD, unpacked);
+            unpacked->pageMessage = NULL;
+            break;
+        case RDS_PAGING_SEGMENT_FUNCTION_1:
+            unpacked->pageType = RDS_PAGING_FUNCTION;
+            unpackPageHeader(page[0].blockC, page[0].blockD, unpacked);
+            break;
+        case RDS_PAGING_SEGMENT_10DIGIT_1:
+        case RDS_PAGING_SEGMENT_18DIGIT_1:
+            unpacked->pageType = page[0].fiveBits & RDS_PAGING_SEGMENT_MASK;
+            unpackPageHeader(page[0].blockC, page[0].blockD, unpacked);
+            unpacked->pageMessage = (char *)calloc(
+                (unpacked->pageType == RDS_PAGING_10DIGIT ? 10 : 18) + 1,
+                sizeof(char));
+            BCD2Char(lowByte(page[0].blockD), unpacked->pageMessage);
+            pmtp = unpacked->pageMessage + 2;
+            BCD2Char(page[1].blockC, page[1].blockD, pmtp);
+            if(unpacked->pageType == RDS_PAGING_18DIGIT) {
+                pmtp += 4;
+                BCD2Char(page[2].blockC, page[2].blockD, pmtp);
+            };
+            break;
+        case RDS_PAGING_SEGMENT_15DIGIT_1:
+            unpacked->pageType = RDS_PAGING_15DIGIT;
+            unpackPageHeader(page[0].blockC, page[0].blockD, unpacked);
+            break;
+        case RDS_PAGING_SEGMENT_ALPHA_1:
+            unpacked->pageType = RDS_PAGING_ALPHA;
+            unpackPageHeader(page[0].blockC, page[0].blockD, unpacked);
+            break;
+        default:
+            //Invalid Group 7A sequence.
+            return;
+    };
+};
+
+void RDSTranslator::unpackPageHeader(word block3, word block4,
+                                     TRDSPage *unpacked) {
+    if(!unpacked)
+        return;
+    unpacked->groupCode = highByte(block3) & 0x0F;
+    unpacked->individualCode = highByte(block4) & 0x0F;
+    if(((highByte(block3) & 0xF0) >> 4) <= 9 &&
+       ((lowByte(block3) & 0xF0) >> 4) <= 9 &&
+       (lowByte(block3) & 0x0F) <= 9 && ((highByte(block4) & 0xF0) >> 4) <=9) {
+        //BCD encoding throughout
+        unpacked->groupCode += ((highByte(block3) & 0xF0) >> 4) * 10;
+        unpacked->individualCode += ((highByte(block4) & 0xF0) >> 4) * 10 +
+        (lowByte(block3) & 0x0F) * 100 + ((lowByte(block3) & 0xF0) >> 4) * 1000;
+    } else {
+        //HEX (i.e. binary) encoding throughout
+        unpacked->groupCode |= highByte(block3) & 0xF0;
+        unpacked->individualCode |= highByte(block4) & 0xF0 |
+                                    (lowByte(block3) << 8);
+    };
+};
+
+void RDSTranslator::BCD2Char(byte BCD, char *text) {
+    byte nibble = (BCD & 0xF0) >> 4;
+    text[0] = (nibble == 0xA ? ' ' : nibble + '0');
+    nibble = BCD & 0x0F;
+    text[1] = (nibble == 0xA ? ' ' : nibble + '0');
+};
+
+void RDSTranslator::BCD2Char(word BCD, char *text) {
+    BCD2Char(highByte(BCD), text);
+    BCD2Char(lowByte(BCD), text + 2);
+};
+
+void RDSTranslator::BCD2Char(word BCD1, word BCD2, char *text) {
+    BCD2Char(BCD1, text);
+    BCD2Char(BCD2, text + 4);
 };
