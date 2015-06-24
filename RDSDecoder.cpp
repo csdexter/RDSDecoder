@@ -1234,18 +1234,19 @@ void RDSTranslator::unpackRDSPage(TRDSRawData page[], byte size,
                                   TRDSPage *unpacked) {
     char *pmtp;
     word twochars;
+    bool enhanced;
+    byte startAt;
 
     if(!unpacked)
         return;
+    enhanced = unpackPageHeader(page[0].blockC, page[0].blockD, unpacked);
     switch(page[0].fiveBits & RDS_PAGING_SEGMENT_MASK) {
         case RDS_PAGING_SEGMENT_NOMESSAGE:
             unpacked->pageType = RDS_PAGING_NOMESSAGE;
-            unpackPageHeader(page[0].blockC, page[0].blockD, unpacked);
             unpacked->pageMessage = NULL;
             break;
         case RDS_PAGING_SEGMENT_FUNCTION_1:
             unpacked->pageType = RDS_PAGING_FUNCTION;
-            unpackPageHeader(page[0].blockC, page[0].blockD, unpacked);
             unpacked->countryCode = (
                 (lowByte(page[0].blockD) & 0xF0) >> 4) * 100 +
                 (lowByte(page[0].blockD) & 0x0F) * 10 +
@@ -1259,7 +1260,6 @@ void RDSTranslator::unpackRDSPage(TRDSRawData page[], byte size,
         case RDS_PAGING_SEGMENT_10DIGIT_1:
         case RDS_PAGING_SEGMENT_18DIGIT_1:
             unpacked->pageType = page[0].fiveBits & RDS_PAGING_SEGMENT_MASK;
-            unpackPageHeader(page[0].blockC, page[0].blockD, unpacked);
             unpacked->pageMessage = (char *)calloc(
                 (unpacked->pageType == RDS_PAGING_10DIGIT ? 10 : 18) + 1,
                 sizeof(char));
@@ -1273,7 +1273,6 @@ void RDSTranslator::unpackRDSPage(TRDSRawData page[], byte size,
             break;
         case RDS_PAGING_SEGMENT_15DIGIT_1:
             unpacked->pageType = RDS_PAGING_15DIGIT;
-            unpackPageHeader(page[0].blockC, page[0].blockD, unpacked);
             unpacked->countryCode = (
                 (lowByte(page[0].blockD) & 0xF0) >> 4) * 100 +
                 (lowByte(page[0].blockD) & 0x0F) * 10 +
@@ -1293,10 +1292,25 @@ void RDSTranslator::unpackRDSPage(TRDSRawData page[], byte size,
             break;
         case RDS_PAGING_SEGMENT_ALPHA_1:
             unpacked->pageType = RDS_PAGING_ALPHA;
-            unpackPageHeader(page[0].blockC, page[0].blockD, unpacked);
-            unpacked->pageMessage = (char *)calloc((size - 1) * 4 + 1,
-                                                   sizeof(char));
-            for(byte i = 1; i < size; i++) {
+            if(enhanced &&
+               (bool)(page[0].blockD & RDS_PAGING_CONTROL_INTERNATIONAL)) {
+              unpacked->pageMessage = (char *)calloc((size - 2) * 4 + 2 + 1,
+                                                     sizeof(char));
+              unpacked->countryCode = (
+                (highByte(page[1].blockC) & 0xF0) >> 4) * 100 +
+                (highByte(page[1].blockC) & 0x0F) * 10 +
+                (lowByte(page[1].blockC) & 0xF0) >> 4;
+              twochars = swab(page[1].blockD);
+              strncpy(unpacked->pageMessage, (char *)&twochars, 2);
+              pmtp = unpacked->pageMessage + 2;
+              startAt = 2;
+            } else {
+              unpacked->pageMessage = (char *)calloc((size - 1) * 4 + 1,
+                                                     sizeof(char));
+              pmtp = unpacked->pageMessage;
+              startAt = 1;
+            };
+            for(byte i = startAt; i < size; i++) {
                 twochars = swab(page[i].blockC);
                 strncpy(&unpacked->pageMessage[(i - 1) * 4],
                         (char *)&twochars, 2);
@@ -1311,12 +1325,14 @@ void RDSTranslator::unpackRDSPage(TRDSRawData page[], byte size,
     };
 };
 
-void RDSTranslator::unpackPageHeader(word block3, word block4,
+bool RDSTranslator::unpackPageHeader(word block3, word block4,
                                      TRDSPage *unpacked) {
     if(!unpacked)
-        return;
+        return false;
     unpacked->groupCode = highByte(block3) & 0x0F;
     unpacked->individualCode = highByte(block4) & 0x0F;
+    unpacked->callCounter = lowByte(block4) & 0x0F;
+    unpacked->enhancedFlags = (lowByte(block4) & 0xF0) >> 4;
     if(((highByte(block3) & 0xF0) >> 4) <= 9 &&
        ((lowByte(block3) & 0xF0) >> 4) <= 9 &&
        (lowByte(block3) & 0x0F) <= 9 && ((highByte(block4) & 0xF0) >> 4) <=9) {
@@ -1324,11 +1340,18 @@ void RDSTranslator::unpackPageHeader(word block3, word block4,
         unpacked->groupCode += ((highByte(block3) & 0xF0) >> 4) * 10;
         unpacked->individualCode += ((highByte(block4) & 0xF0) >> 4) * 10 +
         (lowByte(block3) & 0x0F) * 100 + ((lowByte(block3) & 0xF0) >> 4) * 1000;
+        //This might still be enhanced paging, even if the address was within
+        //BCD range, so double check.
+        if(unpacked->callCounter | unpacked->enhancedFlags)
+            return true;
+        else
+            return false;
     } else {
         //HEX (i.e. binary) encoding throughout
         unpacked->groupCode |= highByte(block3) & 0xF0;
-        unpacked->individualCode |= highByte(block4) & 0xF0 |
-                                    (lowByte(block3) << 8);
+        unpacked->individualCode |= (lowByte(block3) << 8) |
+                                    (highByte(block4) & 0xF0);
+        return true;
     };
 };
 

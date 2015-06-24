@@ -340,6 +340,8 @@ enum {
 
 typedef struct {
     byte pageType;
+    byte enhancedFlags;
+    byte callCounter;
     byte groupCode;
     word individualCode;
     word countryCode;
@@ -904,14 +906,23 @@ class RDSTranslator
         * Description:
         *   Unpacks the RDS paging message header into certain members of a
         *   TRDSPage struct. NOTE: this is compatible with both normal and
-        *   enhanced paging.
+        *   enhanced paging. NOTE: that this is not meant to be auto-detected,
+        *   as the standard assumes that each operator's RDS broadcast and page
+        *   receiver configuration would match apriori. Specifically, a national
+        *   first (i.e. not repeated) enhanced alphanumeric page to a pager
+        *   address in which all digits are smaller than 0xA, on a network which
+        *   does not implement the call counter feature is INDISTINGUISHABLE
+        *   from a basic page to the same receiver.
         * Parameters:
         *   block3 - the Y1, Y2, Z1 and Z2 digits from a Group 7A message.
-        *   block4 - the Z3 and Z4 digits from a Group 7A message.
+        *   block4 - the Z3 and Z4 digits and (in the case of enhanced paging)
+        *            the X1X2 control byte from a Group 7A message.
         *   unpacked - pointer to a TRDSPage struct whose members will receive
         *   the unpacked data.
+        * Returns:
+        *   true if enhanced paging was detected, false otherwise.
         */
-        void unpackPageHeader(word block3, word block4, TRDSPage *unpacked);
+        bool unpackPageHeader(word block3, word block4, TRDSPage *unpacked);
 
         /*
         * Description:
