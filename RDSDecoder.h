@@ -148,6 +148,12 @@
 #define RDS_RTP_CLASS_DESCRIPTOR_GETDATA 63
 #define RDS_PAGING_AB word(0x0010)
 
+// Values for TRDSPage.pageType
+#define RDS_PAGING_NOMESSAGE 0x0
+#define RDS_PAGING_FUNCTION 0x1
+#define RDS_PAGING_DIGIT 0x2
+#define RDS_PAGING_ALPHA 0x3
+
 //RDS Decoder callback types
 #define RDS_CALLBACK_AF 0x00
 #define RDS_CALLBACK_TDC 0x01
@@ -328,15 +334,6 @@ typedef struct {
     byte fiveBits;
     word blockC, blockD;
 } TRDSRawData;
-
-enum {
-  RDS_PAGING_NOMESSAGE = 0x0,
-  RDS_PAGING_FUNCTION = 0x1,
-  RDS_PAGING_10DIGIT = 0x2,
-  RDS_PAGING_18DIGIT = 0x4,
-  RDS_PAGING_15DIGIT = 0x7,
-  RDS_PAGING_ALPHA = 0x8
-};
 
 typedef struct {
     byte pageType;

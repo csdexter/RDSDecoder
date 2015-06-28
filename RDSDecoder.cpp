@@ -1259,20 +1259,21 @@ void RDSTranslator::unpackRDSPage(TRDSRawData page[], byte size,
             break;
         case RDS_PAGING_SEGMENT_10DIGIT_1:
         case RDS_PAGING_SEGMENT_18DIGIT_1:
-            unpacked->pageType = page[0].fiveBits & RDS_PAGING_SEGMENT_MASK;
+            unpacked->pageType = RDS_PAGING_DIGIT;
             unpacked->pageMessage = (char *)calloc(
-                (unpacked->pageType == RDS_PAGING_10DIGIT ? 10 : 18) + 1,
-                sizeof(char));
-            BCD2Char(lowByte(page[0].blockD), unpacked->pageMessage);
+                (page[0].fiveBits & RDS_PAGING_SEGMENT_MASK ==
+                 RDS_PAGING_SEGMENT_10DIGIT_1 ? 10 : 18) + 1, sizeof(char));
+            BCD2Char((byte)lowByte(page[0].blockD), unpacked->pageMessage);
             pmtp = unpacked->pageMessage + 2;
             BCD2Char(page[1].blockC, page[1].blockD, pmtp);
-            if(unpacked->pageType == RDS_PAGING_18DIGIT) {
+            if(page[0].fiveBits & RDS_PAGING_SEGMENT_MASK ==
+               RDS_PAGING_SEGMENT_18DIGIT_1) {
                 pmtp += 4;
                 BCD2Char(page[2].blockC, page[2].blockD, pmtp);
             };
             break;
         case RDS_PAGING_SEGMENT_15DIGIT_1:
-            unpacked->pageType = RDS_PAGING_15DIGIT;
+            unpacked->pageType = RDS_PAGING_DIGIT;
             unpacked->countryCode = (
                 (lowByte(page[0].blockD) & 0xF0) >> 4) * 100 +
                 (lowByte(page[0].blockD) & 0x0F) * 10 +
@@ -1286,37 +1287,89 @@ void RDSTranslator::unpackRDSPage(TRDSRawData page[], byte size,
             pmtp += 2;
             BCD2Char(page[1].blockD, pmtp);
             pmtp += 4;
-            BCD2Char(page[2].blockC, pmtp);
-            pmtp += 4;
-            BCD2Char(page[2].blockD, pmtp);
+            BCD2Char(page[2].blockC, page[2].blockD, pmtp);
             break;
         case RDS_PAGING_SEGMENT_ALPHA_1:
-            unpacked->pageType = RDS_PAGING_ALPHA;
-            if(enhanced &&
-               (bool)(page[0].blockD & RDS_PAGING_CONTROL_INTERNATIONAL)) {
-              unpacked->pageMessage = (char *)calloc((size - 2) * 4 + 2 + 1,
-                                                     sizeof(char));
-              unpacked->countryCode = (
-                (highByte(page[1].blockC) & 0xF0) >> 4) * 100 +
-                (highByte(page[1].blockC) & 0x0F) * 10 +
-                (lowByte(page[1].blockC) & 0xF0) >> 4;
-              twochars = swab(page[1].blockD);
-              strncpy(unpacked->pageMessage, (char *)&twochars, 2);
-              pmtp = unpacked->pageMessage + 2;
-              startAt = 2;
+            //This could be an alphanumeric page in basic paging or any kind of
+            //page in enhanced paging.
+            if(enhanced) {
+                switch((page[0].blockD & RDS_PAGING_ENHANCED_TYPE_MASK) >>
+                        RDS_PAGING_ENHANCED_TYPE_SHR) {
+                    case RDS_PAGING_ENHANCED_TYPE_ALPHA:
+                        unpacked->pageType = RDS_PAGING_ALPHA;
+                        break;
+                    case RDS_PAGING_ENHANCED_TYPE_DIGIT:
+                        unpacked->pageType = RDS_PAGING_DIGIT;
+                        break;
+                    case RDS_PAGING_ENHANCED_TYPE_FUNCTION:
+                        unpacked->pageType = RDS_PAGING_FUNCTION;
+                        break;
+                }
+                if((bool)(page[0].blockD & RDS_PAGING_CONTROL_INTERNATIONAL)) {
+                    unpacked->countryCode = (
+                        (highByte(page[1].blockC) & 0xF0) >> 4) * 100 +
+                        (highByte(page[1].blockC) & 0x0F) * 10 +
+                        (lowByte(page[1].blockC) & 0xF0) >> 4;
+                    switch(unpacked->pageType) {
+                        case RDS_PAGING_ALPHA:
+                        //Function messages are hex (i.e. binary) encoded,
+                        //therefore exactly the same handling as characters.
+                        case RDS_PAGING_FUNCTION:
+                            unpacked->pageMessage = (char *)calloc((size - 2) *
+                                                    4 + 2 + 1, sizeof(char));
+                            twochars = swab(page[1].blockD);
+                            strncpy(
+                                unpacked->pageMessage, (char *)&twochars, 2);
+                            pmtp = unpacked->pageMessage + 2;
+                            break;
+                        case RDS_PAGING_DIGIT:
+                            unpacked->pageMessage = (char *)calloc((size - 2) *
+                                                    8 + 4 + 1, sizeof(char));
+                            BCD2Char(page[1].blockD, unpacked->pageMessage);
+                            pmtp = unpacked->pageMessage + 4;
+                            break;
+                    }
+                    startAt = 2;
+                } else {
+                    switch(unpacked->pageType) {
+                        case RDS_PAGING_ALPHA:
+                        case RDS_PAGING_FUNCTION:
+                            unpacked->pageMessage = (char *)calloc((size - 1) *
+                                                    4 + 1, sizeof(char));
+                            break;
+                        case RDS_PAGING_DIGIT:
+                            unpacked->pageMessage = (char *)calloc((size - 1) *
+                                                    8 + 1, sizeof(char));
+                            break;
+                    }
+                    pmtp = unpacked->pageMessage;
+                    startAt = 1;
+                }
             } else {
-              unpacked->pageMessage = (char *)calloc((size - 1) * 4 + 1,
-                                                     sizeof(char));
-              pmtp = unpacked->pageMessage;
-              startAt = 1;
-            };
+                //Alphanumeric message in basic paging.
+                unpacked->pageType = RDS_PAGING_ALPHA;
+                unpacked->pageMessage = (char *)calloc((size - 1) * 4 + 1,
+                                                       sizeof(char));
+                pmtp = unpacked->pageMessage;
+                startAt = 1;
+            }
+
             for(byte i = startAt; i < size; i++) {
-                twochars = swab(page[i].blockC);
-                strncpy(&unpacked->pageMessage[(i - 1) * 4],
-                        (char *)&twochars, 2);
-                twochars = swab(page[i].blockD);
-                strncpy(&unpacked->pageMessage[(i - 1) * 4 + 2],
-                        (char *)&twochars, 2);
+                switch(unpacked->pageType) {
+                    case RDS_PAGING_ALPHA:
+                    case RDS_PAGING_FUNCTION:
+                        twochars = swab(page[i].blockC);
+                        strncpy(pmtp, (char *)&twochars, 2);
+                        pmtp += 2;
+                        twochars = swab(page[i].blockD);
+                        strncpy(pmtp, (char *)&twochars, 2);
+                        pmtp += 2;
+                        break;
+                    case RDS_PAGING_DIGIT:
+                        BCD2Char(page[i].blockC, page[i].blockD, pmtp);
+                        pmtp += 8;
+                        break;
+                }
             };
             break;
         default:
