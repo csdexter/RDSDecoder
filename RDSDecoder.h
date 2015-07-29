@@ -14,6 +14,12 @@
 
 #if defined(__GNUC__)
 # if defined(__AVR__)
+// Bug in AVR-libc: *printf() macros are gated by __STDC_LIMIT_MACROS instead
+// of __STDC_FORMAT_MACROS as the standard dictates. Define both to
+// future-proof. Also, this needs to be defined here as Arduino.h acts as
+// an umbrella header for most of the system ones.
+#  define __STDC_FORMAT_MACROS
+#  define __STDC_LIMIT_MACROS
 #  if defined(ARDUINO) && ARDUINO >= 100
 #   include <Arduino.h>
 #  else

@@ -14,11 +14,22 @@
 #include "RDSDecoder-private.h"
 #include "iso14819-2.h"
 
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 
 #if defined(__GNUC__)
-# if defined(__i386__) || defined(__x86_64__)
+# if defined(__AVR__)
+#  include <avr/pgmspace.h>
+// Bug in Arduino IDE: having avr-libc installed on the system overrides the
+// one shipped with the IDE, which means you may end up linking against an
+// ancient one.
+#  if !defined(pgm_read_ptr)
+#   if !defined(pgm_read_ptr_near)
+#    define pgm_read_ptr_near(address_short) (void*)__LPM_word((uint16_t)(address_short))
+#   endif
+#   define pgm_read_ptr(address_short) pgm_read_ptr_near(address_short)
+#  endif
+# elif defined(__i386__) || defined(__x86_64__)
 #  define __STDC_FORMAT_MACROS
 #  include <inttypes.h>
 #  include <stdio.h>
@@ -1226,7 +1237,7 @@ void RDSTranslator::unpackPagingMessage13(byte ePbits1, word ePbits2,
     unpacked->interval = (ePbits2 & RDS_PAGING_IT_MASK) >> RDS_PAGING_IT_SHR;
     unpacked->messageSorting = (ePbits2 & RDS_PAGING_SORT_MASK) >>
                                RDS_PAGING_SORT_SHR;
-    unpacked->addressNotification = ((ePbits2 & RDS_PAGING_ADDR1_MASK) << 16) |
+    unpacked->addressNotification = ((uint32_t)(ePbits2 & RDS_PAGING_ADDR1_MASK) << 16) |
                                     ePbits3;
 };
 
