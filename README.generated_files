@@ -2,7 +2,7 @@ About generated files
 =====================
 
 1) Headers:
-The files so14819-2-events.h and iso14819-2-supplementary.h are generated from
+The files iso14819-2-events.h and iso14819-2-supplementary.h are generated from
 iso-14819_2-event_code_list.csv and
 iso-14819_2-supplementary_information_list.csv, respectively, by gentables.py.
 
