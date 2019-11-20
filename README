@@ -1,4 +1,4 @@
-Arduino RDS/RBDS (IEC 62016/NRSC-4-B) Decoding Library
+Arduino RDS/RBDS (IEC 62106/NRSC-4-B) Decoding Library
 
 Split off from Arduino Si4735 Library 
   by Radu - Eosif Mihailescu <radu.mihailescu@linux360.ro> 3/29/2015
