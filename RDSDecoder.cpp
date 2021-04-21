@@ -131,6 +131,7 @@ void RDSDecoder::decodeRDSGroup(word block[]){
                 _callbacks[RDS_CALLBACK_SLP](
                     block[1] & (RDS_PAGING_TNGID_MASK | RDS_PAGING_BSISID_MASK),
                     true, block[2], block[3]);
+            break;
         case RDS_GROUP_1B:
             _status.programItemNumber = block[3];
             break;
@@ -199,21 +200,23 @@ void RDSDecoder::decodeRDSGroup(word block[]){
         case RDS_GROUP_12A:
         case RDS_GROUP_12B:
         case RDS_GROUP_13B:
-            if(grouptype == _status.TMC.carriedInGroup)
+        case RDS_GROUP_15A:
+            if(grouptype == _status.TMC.carriedInGroup) {
                 if (_callbacks[RDS_CALLBACK_TMC])
                     _callbacks[RDS_CALLBACK_TMC](
                         block[1] & RDS_ODA_GROUP_MASK, true, block[2],
                         block[3]);
-            else if(grouptype == _status.RTP.carriedInGroup)
+            } else if(grouptype == _status.RTP.carriedInGroup) {
                 if (_callbacks[RDS_CALLBACK_RTP])
                     _callbacks[RDS_CALLBACK_RTP](
                         block[1] & RDS_ODA_GROUP_MASK, true, block[2],
                         block[3]);
-            else if(grouptype == _status.ERT.carriedInGroup)
+            } else if(grouptype == _status.ERT.carriedInGroup) {
                 if (_callbacks[RDS_CALLBACK_ERT])
                     _callbacks[RDS_CALLBACK_ERT](
                         block[1] & RDS_ODA_GROUP_MASK, true, block[2],
                         block[3]);
+            }
             break;
         case RDS_GROUP_4A:
             unsigned long MJD, CT, ys;
@@ -279,55 +282,54 @@ void RDSDecoder::decodeRDSGroup(word block[]){
                     block[1] & RDS_ODA_GROUP_MASK, true, block[2], block[3]);
             break;
         case RDS_GROUP_14A:
-            switch(block[1] & RDS_EON_MASK){
-                case RDS_EON_TYPE_PS_SA0:
-                case RDS_EON_TYPE_PS_SA1:
-                case RDS_EON_TYPE_PS_SA2:
-                case RDS_EON_TYPE_PS_SA3:
-                    twochars = swab(block[2]);
-                    strncpy(
-                        &_status.EON.programService[
-                            (block[1] & RDS_EON_MASK) * 2],
-                        (char *)&twochars, 2);
-                    break;
-                case RDS_EON_TYPE_AF:
-                    if (_callbacks[RDS_CALLBACK_EON])
-                        _callbacks[RDS_CALLBACK_EON](1, true, block[2], 0x00);
-                    break;
-                case RDS_EON_TYPE_MF_FM0:
-                case RDS_EON_TYPE_MF_FM1:
-                case RDS_EON_TYPE_MF_FM2:
-                case RDS_EON_TYPE_MF_FM3:
-                    if (_callbacks[RDS_CALLBACK_EON])
-                        _callbacks[RDS_CALLBACK_EON](2, true, block[2], 0x00);
-                    break;
-                case RDS_EON_TYPE_MF_AM:
-                    if (_callbacks[RDS_CALLBACK_EON])
-                        _callbacks[RDS_CALLBACK_EON](3, true, block[2], 0x00);
-                    break;
-                case RDS_EON_TYPE_LINKAGE:
-                    memcpy(&_status.EON.linkageInformation, &block[2],
-                           sizeof(_status.EON.linkageInformation));
-                    break;
-                case RDS_EON_TYPE_PTYTA:
-                    _status.EON.PTY = (block[2] & RDS_EON_PTY_A_MASK) >>
-                        RDS_EON_PTY_A_SHR;
-                    _status.EON.TA = block[2] & RDS_EON_TA_A;
-                    break;
-                case RDS_EON_TYPE_PIN:
-                    _status.EON.programItemNumber = block[2];
-                    break;
-            };
         case RDS_GROUP_14B:
             _status.EON.TP = block[1] & RDS_EON_TP;
             _status.EON.programIdentifier = block[3];
-            if (grouptype == RDS_GROUP_14B)
+            if (grouptype == RDS_GROUP_14A) {
+                switch(block[1] & RDS_EON_MASK){
+                    case RDS_EON_TYPE_PS_SA0:
+                    case RDS_EON_TYPE_PS_SA1:
+                    case RDS_EON_TYPE_PS_SA2:
+                    case RDS_EON_TYPE_PS_SA3:
+                        twochars = swab(block[2]);
+                        strncpy(
+                            &_status.EON.programService[
+                                (block[1] & RDS_EON_MASK) * 2],
+                            (char *)&twochars, 2);
+                        break;
+                    case RDS_EON_TYPE_AF:
+                        if (_callbacks[RDS_CALLBACK_EON])
+                            _callbacks[RDS_CALLBACK_EON](1, true, block[2], 0x00);
+                        break;
+                    case RDS_EON_TYPE_MF_FM0:
+                    case RDS_EON_TYPE_MF_FM1:
+                    case RDS_EON_TYPE_MF_FM2:
+                    case RDS_EON_TYPE_MF_FM3:
+                        if (_callbacks[RDS_CALLBACK_EON])
+                            _callbacks[RDS_CALLBACK_EON](2, true, block[2], 0x00);
+                        break;
+                    case RDS_EON_TYPE_MF_AM:
+                        if (_callbacks[RDS_CALLBACK_EON])
+                            _callbacks[RDS_CALLBACK_EON](3, true, block[2], 0x00);
+                        break;
+                    case RDS_EON_TYPE_LINKAGE:
+                        memcpy(&_status.EON.linkageInformation, &block[2],
+                               sizeof(_status.EON.linkageInformation));
+                        break;
+                    case RDS_EON_TYPE_PTYTA:
+                        _status.EON.PTY = (block[2] & RDS_EON_PTY_A_MASK) >>
+                            RDS_EON_PTY_A_SHR;
+                        _status.EON.TA = block[2] & RDS_EON_TA_A;
+                        break;
+                    case RDS_EON_TYPE_PIN:
+                        _status.EON.programItemNumber = block[2];
+                        break;
+                };
+            } else {
                 _status.EON.TA = block[1] & RDS_EON_TA_B;
                 _status.EON.PTY = mapShortPTY(
                     (block[1] & RDS_EON_PTY_B_MASK) >> RDS_EON_PTY_B_SHR);
-            break;
-        case RDS_GROUP_15A:
-            //Withdrawn and currently unallocated, ignore
+            }
             break;
     }
 }
@@ -418,9 +420,6 @@ RDSDecoder::RDSDecoder(byte locale) {
 }
 
 byte RDSDecoder::mapShortPTY(byte shortPTY) {
-    if(!shortPTY)
-        return 0; // PTY of None/Undefined
-
     switch(shortPTY) {
         case RDS_EON_PTY_B_NEWS:
             return 1; // PTY of News
@@ -432,6 +431,8 @@ byte RDSDecoder::mapShortPTY(byte shortPTY) {
             return 31; // PTY of Alarm
             break;
     };
+
+    return 0; // PTY of None/Undefined
 };
 
 const char PTY2Text_S_None[] PROGMEM = "None";
@@ -1261,7 +1262,7 @@ void RDSTranslator::unpackRDSPage(TRDSRawData page[], byte size,
             unpacked->countryCode = (
                 (lowByte(page[0].blockD) & 0xF0) >> 4) * 100 +
                 (lowByte(page[0].blockD) & 0x0F) * 10 +
-                (highByte(page[1].blockC) & 0xF0) >> 4;
+                ((highByte(page[1].blockC) & 0xF0) >> 4);
             unpacked->pageMessage = (char *)calloc(4 + 1, sizeof(char));
             unpacked->pageMessage[0] = highByte(page[1].blockC) & 0x0F;
             unpacked->pageMessage[1] = lowByte(page[1].blockC);
@@ -1272,12 +1273,12 @@ void RDSTranslator::unpackRDSPage(TRDSRawData page[], byte size,
         case RDS_PAGING_SEGMENT_18DIGIT_1:
             unpacked->pageType = RDS_PAGING_DIGIT;
             unpacked->pageMessage = (char *)calloc(
-                (page[0].fiveBits & RDS_PAGING_SEGMENT_MASK ==
+                ((page[0].fiveBits & RDS_PAGING_SEGMENT_MASK) ==
                  RDS_PAGING_SEGMENT_10DIGIT_1 ? 10 : 18) + 1, sizeof(char));
             BCD2Char((byte)lowByte(page[0].blockD), unpacked->pageMessage);
             pmtp = unpacked->pageMessage + 2;
             BCD2Char(page[1].blockC, page[1].blockD, pmtp);
-            if(page[0].fiveBits & RDS_PAGING_SEGMENT_MASK ==
+            if((page[0].fiveBits & RDS_PAGING_SEGMENT_MASK) ==
                RDS_PAGING_SEGMENT_18DIGIT_1) {
                 pmtp += 4;
                 BCD2Char(page[2].blockC, page[2].blockD, pmtp);
@@ -1288,7 +1289,7 @@ void RDSTranslator::unpackRDSPage(TRDSRawData page[], byte size,
             unpacked->countryCode = (
                 (lowByte(page[0].blockD) & 0xF0) >> 4) * 100 +
                 (lowByte(page[0].blockD) & 0x0F) * 10 +
-                (highByte(page[1].blockC) & 0xF0) >> 4;
+                ((highByte(page[1].blockC) & 0xF0) >> 4);
             unpacked->pageMessage = (char *)calloc(15 + 1, sizeof(char));
             unpacked->pageMessage[0] = (
                 (highByte(page[1].blockC) & 0x0F) == 0xA ? ' ' :
@@ -1320,7 +1321,7 @@ void RDSTranslator::unpackRDSPage(TRDSRawData page[], byte size,
                     unpacked->countryCode = (
                         (highByte(page[1].blockC) & 0xF0) >> 4) * 100 +
                         (highByte(page[1].blockC) & 0x0F) * 10 +
-                        (lowByte(page[1].blockC) & 0xF0) >> 4;
+                        ((lowByte(page[1].blockC) & 0xF0) >> 4);
                     switch(unpacked->pageType) {
                         case RDS_PAGING_ALPHA:
                         //Function messages are hex (i.e. binary) encoded,
