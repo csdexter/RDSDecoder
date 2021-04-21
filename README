@@ -8,7 +8,7 @@ as received from a broadcast FM radio station. The input is by single RDS group
 at a time while the output is a global (accumulated) state record as well as
 a callback system for certain types of received data.
 
-In particular, please note this library does not cover decoding (as in framing 
+In particular, please note this library does not cover decoding (as in framing
 detection and data integrity checking) an RDS data stream as received from a
 stand-alone RDS demodulator chip.
 

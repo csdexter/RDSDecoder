@@ -1,3 +1,5 @@
  -> implement missing parts of the RDS (and related) standards
  -> make storage options for ISO 14819-2 more flexible/friendly
  -> add example when code complete
+ -> make cross platform, now that the Arduino IDE is
+ 
